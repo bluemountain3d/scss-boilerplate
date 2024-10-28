@@ -1,0 +1,94 @@
+//*** Styles index ***//
+@charset 'utf-8';
+
+// Vendors
+@forward './vendors';
+
+// Base
+@forward './base';
+
+// Components
+@forward './components';
+
+// Layout
+@forward './layout';
+
+// Pages
+@forward './pages';
+
+
+// Example Structure
+//  scss/
+//  |
+//  |- __TEMPLATES__
+//  |    |- __MODULE-TEMPLATE__.scss
+//  |
+//  |- abstracts/
+//  |    |- functions/
+//  |    |   |- _fn-px2rem.scss
+//  |    |   |- _fn-hex2rgb.scss
+//  |    |   ...
+//  |    |   |- _index.scss
+//  |    |
+//  |    |- mixins/
+//  |    |   |- _mx-media-queries.scss
+//  |    |   |- _mx-set-colors.scss
+//  |    |   ...
+//  |    |   |- _index.scss
+//  |    |
+//  |    |- variables/
+//  |    |   |- _var-colors.scss
+//  |    |   |- _var-fonts.scss
+//  |    |   |- _var-breakpoints.scss
+//  |    |   ...
+//  |    |   |- _index.scss
+//  |    |
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- base/
+//  |    |- _root.scss
+//  |    |- _reset.scss
+//  |    |- _typography.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- utilities/
+//  |    |- _spacing.scss
+//  |    |- _grid.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- components/
+//  |    |- _buttons.scss
+//  |    |- _carousel.scss
+//  |    |- _dropdown.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- layout/
+//  |    |- _header.scss
+//  |    |- _sidebar.scss
+//  |    |- _footer.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- pages/
+//  |    |- _about.scss
+//  |    |- _contact.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- themes/
+//  |    |- _theme.scss
+//  |    |- _admin.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- vendors/
+//  |    |- _bootstrap.scss
+//  |    |- _modern-reset.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- style.scss
