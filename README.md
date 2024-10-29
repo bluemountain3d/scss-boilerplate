@@ -158,8 +158,36 @@ The `vendors` folder contains third-party libraries or frameworks that need to b
 Each folder (like `abstracts`, `base`, `components`, etc.) contains an _index.scss file. This file serves as a central point to import and consolidate all partials within that folder, making it easy to manage imports in the main `style.scss` file.
 
 **Purpose** of `_index.scss`
-- **Centralized Imports**: The `_index.scss` file imports all individual partials within its folder. For example, `abstracts/_index.scss` imports all variables, functions, and mixins from the subfolders in the abstracts folder.
+- **Centralized Imports**: The `_index.scss` file imports all individual partials within its folder. For example, `abstracts/[subfolder]/_index.scss` imports all variables, functions, and mixins within each subfolder folder.
 - **Organized Main Import**: Rather than listing each partial in `style.scss`, you simply import each folder’s `_index.scss`. This keeps the main file cleaner and easier to read.
+
+#### Why Use `@use` with Aliases (as `var`, as `fn`, as `mx`)
+1. **Namespace Management**: With `@use`, SASS creates a namespace for each imported file. By defining an alias (like `var` for `variables`), you avoid naming conflicts and keep your code organized. This means if multiple files define a `$primary-color` variable, each file’s value is kept separate under its unique alias.
+```
+// Example usage
+color: var.$primary-color;
+```
+2. **Improved Readability**: Using descriptive aliases like `var`, `fn`, and `mx` helps immediately clarify the purpose of each imported item:
+- `var` for variables
+- `fn` for functions
+- `mx` for mixins
+This makes your SASS easier to read, especially in larger projects where it’s helpful to see at a glance what type of asset you’re referencing.
+3. **Scoped Imports for Better Maintenance**: By using `@use` with aliases, you limit each import to its defined namespace. This prevents global scope pollution, making it easier to refactor and maintain your code, as you know exactly where each variable, function, or mixin originates.
+4. **Consistent Naming**: Establishing consistent naming conventions across your imports—like always using `var`, `fn`, and `mx`—allows any developer working on the project to understand the structure immediately. This consistency can save time and reduce errors in large codebases.
+##### Example of Aliased Imports
+```
+@use '../abstracts/variables' as var; // All variables are scoped under 'var'
+@use '../abstracts/functions' as fn;  // All functions are scoped under 'fn'
+@use '../abstracts/mixins' as mx;     // All mixins are scoped under 'mx'
+
+// Usage in a partial
+.example {
+  color: var.$primary-color;
+  padding: fn.spacing(2);
+  @include mx.flex-center;
+}
+```
+By adopting @use with aliases, you maintain a structured, organized, and scalable SASS architecture that’s easy to read, avoids conflicts, and keeps your code maintainable.
 
 ### Main Entry File
 - `style.scss`: The main entry point that collects all other partials and builds the final compiled CSS.
