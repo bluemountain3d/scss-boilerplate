@@ -83,68 +83,68 @@ This document explains the SASS 7-1 folder structure, organized for modularity, 
 
 ### Folder Explanations
 1. **TEMPLATES**
-- `__MODULE-TEMPLATE__.scss`: A starter template for creating new SASS partials quickly. This template includes necessary imports, naming conventions, and structure.
+    - `__MODULE-TEMPLATE__.scss`: A starter template for creating new SASS partials quickly. This template includes necessary imports, naming conventions, and structure.
 
 2. **Abstracts**
 The `abstracts` folder contains foundational tools like variables, functions, and mixins, ensuring they are reusable throughout the project.
-- **Functions**: Located in abstracts/functions/, these files contain reusable SASS functions.
-Example Template: `_fn-[NAME].scss`
-    ```plaintext
-    //*** Abstracts Function: Name ***//
-    @use '../variables' as var;
-    
-    @function my-function($myVar: "Default Value") {
-    // Do something...
-    @return $result;
-    }
-    ```
-- **Mixins**: Located in abstracts/mixins/, these files contain mixins for common patterns.
-Example Template: `_mx-[NAME].scss`
-    ```
-    //*** Abstracts Mixin: Name ***//
-    @use '../variables' as var;
-    @use '../functions' as fn;
-    
-    @mixin mixin-name($myVar: "Default Value") {
-      @content;
-    }
-    ```
-- **Variables**: Located in abstracts/variables/, this is where global variables (e.g., colors, font sizes, and breakpoints) are defined.
-- Example Template: `_var-[NAME].scss`
-    ```
-    //*** Abstracts Variables: [NAME] ***//
-    
-    // Example variable
-    $base-font-size: 16px;
-    
-    // Example map
-    $breakpoints: (
-      "mobile": 320px,
-      "phablet": 540px,
-      "tablet": 720px,
-      "laptop": 1024px,
-      "desktop": 1440px
-    );
-    ```
+    - **Functions**: Located in abstracts/functions/, these files contain reusable SASS functions.
+    Example Template: `_fn-[NAME].scss`
+        ```plaintext
+        //*** Abstracts Function: Name ***//
+        @use '../variables' as var;
+        
+        @function my-function($myVar: "Default Value") {
+        // Do something...
+        @return $result;
+        }
+        ```
+    - **Mixins**: Located in abstracts/mixins/, these files contain mixins for common patterns.
+    Example Template: `_mx-[NAME].scss`
+        ```
+        //*** Abstracts Mixin: Name ***//
+        @use '../variables' as var;
+        @use '../functions' as fn;
+        
+        @mixin mixin-name($myVar: "Default Value") {
+          @content;
+        }
+        ```
+    - **Variables**: Located in abstracts/variables/, this is where global variables (e.g., colors, font sizes, and breakpoints) are defined.
+    - Example Template: `_var-[NAME].scss`
+        ```
+        //*** Abstracts Variables: [NAME] ***//
+        
+        // Example variable
+        $base-font-size: 16px;
+        
+        // Example map
+        $breakpoints: (
+          "mobile": 320px,
+          "phablet": 540px,
+          "tablet": 720px,
+          "laptop": 1024px,
+          "desktop": 1440px
+        );
+        ```
 
 3. **Vendors**
 Third-party libraries and resets, such as Bootstrap and Normalize.css, that are imported into the project.
 
 4. **Utilites**
 Contains utility classes and foundational styles like resets, root variables, spacing, and grid systems.
-- `_reset.scss`: Resets to ensure consistent styling across browsers.
-- `_root.scss`: Global variables and custom properties.
-- `_spacing.scss` and `_grid.scss`: Utility classes for spacing and grid layout.
+    - `_reset.scss`: Resets to ensure consistent styling across browsers.
+    - `_root.scss`: Global variables and custom properties.
+    - `_spacing.scss` and `_grid.scss`: Utility classes for spacing and grid layout.
 
 5. **Theme**
 Holds theme-specific styles like colors, fonts, and typography settings, allowing for easy customization and theming.
-- `_font.scss`: Contains @font-face rules for self-hosted fonts.
-- `_colors.scss`: Theme-specific color settings.
-- `_typography.scss`: Typography styles using global variables and theme-specific settings.
+    - `_font.scss`: Contains @font-face rules for self-hosted fonts.
+    - `_colors.scss`: Theme-specific color settings.
+    - `_typography.scss`: Typography styles using global variables and theme-specific settings.
 
 6. **Base**
 Base styles for general HTML elements and structural styling that applies globally.
-- `_general.scss`: Contains global styling for elements like `html` and `body`.
+    - `_general.scss`: Contains global styling for elements like `html` and `body`.
 
 7. **Components**
 The `components` folder contains individual components, like buttons, carousels, and dropdowns. Each component is meant to be modular and independent.
@@ -156,7 +156,7 @@ The `layout` folder is where styles for the main page structure reside, like hea
 The `pages` folder contains page-specific styles, such as styles that only apply to the About or Contact page.
 
 ### `_index.scss` Files
-Each folder (like `abstracts/functions`, `base`, `components`, etc.) contains an _index.scss file. This file serves as a central point to import and consolidate all partials within that folder, making it easy to manage imports in the main `style.scss` file.
+Each folder (like `abstracts/functions`, `base`, `components`, etc.) contains an `_index.scss file`. This file serves as a central point to import and consolidate all partials within that folder, making it easy to manage imports in the main `style.scss` file.
 
 **Purpose** of `_index.scss`
 - **Centralized Imports**: The `_index.scss` file imports all individual partials within its folder. For example, `abstracts/[subfolder]/_index.scss` imports all variables, functions, and mixins within each subfolder folder.
@@ -188,4 +188,4 @@ Each folder (like `abstracts/functions`, `base`, `components`, etc.) contains an
 By adopting @use with aliases, you maintain a structured, organized, and scalable SASS architecture that’s easy to read, avoids conflicts, and keeps your code maintainable.
 
 ### Main Entry File
-- `style.scss`: The main entry point that collects all other partials and builds the final compiled CSS.
+  - `style.scss`: The main entry point that collects all other partials and builds the final compiled CSS.
