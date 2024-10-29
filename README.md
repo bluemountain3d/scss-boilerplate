@@ -155,7 +155,7 @@ The `themes` folder contains theme-specific styles, making it easy to switch bet
 The `vendors` folder contains third-party libraries or frameworks that need to be imported, such as Bootstrap or Normalize.css.
 
 ### `_index.scss` Files
-Each folder (like `abstracts`, `base`, `components`, etc.) contains an _index.scss file. This file serves as a central point to import and consolidate all partials within that folder, making it easy to manage imports in the main `style.scss` file.
+Each folder (like `abstracts/functions`, `base`, `components`, etc.) contains an _index.scss file. This file serves as a central point to import and consolidate all partials within that folder, making it easy to manage imports in the main `style.scss` file.
 
 **Purpose** of `_index.scss`
 - **Centralized Imports**: The `_index.scss` file imports all individual partials within its folder. For example, `abstracts/[subfolder]/_index.scss` imports all variables, functions, and mixins within each subfolder folder.
