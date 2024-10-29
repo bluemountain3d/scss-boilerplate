@@ -82,7 +82,7 @@ This document explains the SASS 7-1 folder structure, organized for modularity, 
 ```
 
 ### Folder Explanations
-1. **TEMPLATES**
+1. **TEMPLATE**
     - `__MODULE-TEMPLATE__.scss`: A starter template for creating new SASS partials quickly. This template includes necessary imports, naming conventions, and structure.
 
 2. **Abstracts**
