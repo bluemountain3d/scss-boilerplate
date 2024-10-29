@@ -154,14 +154,14 @@ The `themes` folder contains theme-specific styles, making it easy to switch bet
 9. **Vendors**
 The `vendors` folder contains third-party libraries or frameworks that need to be imported, such as Bootstrap or Normalize.css.
 
-#### `_index.scss` Files
+### `_index.scss` Files
 Each folder (like `abstracts`, `base`, `components`, etc.) contains an _index.scss file. This file serves as a central point to import and consolidate all partials within that folder, making it easy to manage imports in the main `style.scss` file.
 
 **Purpose** of `_index.scss`
 - **Centralized Imports**: The `_index.scss` file imports all individual partials within its folder. For example, `abstracts/[subfolder]/_index.scss` imports all variables, functions, and mixins within each subfolder folder.
 - **Organized Main Import**: Rather than listing each partial in `style.scss`, you simply import each folder’s `_index.scss`. This keeps the main file cleaner and easier to read.
 
-#### Why Use `@use` with Aliases (as `var`, as `fn`, as `mx`)
+### Why Use `@use` with Aliases (as `var`, as `fn`, as `mx`)
 1. **Namespace Management**: With `@use`, SASS creates a namespace for each imported file. By defining an alias (like `var` for `variables`), you avoid naming conflicts and keep your code organized. This means if multiple files define a `$primary-color` variable, each file’s value is kept separate under its unique alias.
 ```
 // Example usage
