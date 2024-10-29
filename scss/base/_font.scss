@@ -1,0 +1,19 @@
+//*** Self hosted fonts ***//
+
+$_module-name: "Font Faces";
+
+/* ### #{$_module-name} START */
+
+// Example
+@font-face {
+  font-family: 'Font Family Name';
+  src: local(''),
+       url('../path-to-font-file/font-name.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%;
+}
+
+/* ### #{$_module-name} END
+/* ------------------------------------------------------------ */

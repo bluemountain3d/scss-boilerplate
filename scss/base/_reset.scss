@@ -1,14 +1,58 @@
-/* ### CSS Reset START ### */
+//*** Base: CSS Reset ***//
+
+@use '../abstracts/variables' as var;
+
+// Set name
+$_module-name: "CSS Reset";
+
+/* ### #{$_module-name} START */
 
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
+// Set Smooth scroll
+html {
+  scroll-behavior: smooth;
+}
 
+/* Remove Margin and padding */
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, blockquote, figure, hr, form, fieldset, legend, button, input, textarea {
+  margin: 0;
+  padding: 0;
+}
 
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
 
+/* <a> elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
 
+/* Responsive images and video */
+img, picture, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
 
+// For those who prefere reduced motion on the site
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+      scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+      scroll-behavior: auto !important;
+      transition: none;
+  }
+}
 
-
-/* ### CSS Reset END ### */
+/* ### #{$_module-name} END
+/* ------------------------------------------------------------ */

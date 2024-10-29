@@ -1,0 +1,13 @@
+//*** Abstracts Variables: Name ***//
+
+// Example variable
+$base-font-size: 16px;
+
+// Example map
+$breakpoints: (
+  "mobile": 320px,
+  "phablet": 540px,
+  "tablet": 720px,
+  "laptop": 1024px,
+  "desktop": 1440px
+);
