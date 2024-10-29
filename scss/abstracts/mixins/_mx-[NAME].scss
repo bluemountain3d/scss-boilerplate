@@ -5,5 +5,6 @@
 
 // Example
 @mixin mixin-name($myVar: "Default Value") {
+  // Some styling stuff...
   @content;
 }

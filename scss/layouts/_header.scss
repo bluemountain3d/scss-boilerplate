@@ -1,10 +1,10 @@
-//*** Base: Root ***//
+//*** Layout: Header ***//
 
 @use '../abstracts/variables' as var;
 @use '../abstracts/functions' as fn;
 @use '../abstracts/mixins' as mx;
 
-$_module-name: "ROOT";
+$_module-name: "Page Header";
 
 /* ### #{$_module-name} START */
 

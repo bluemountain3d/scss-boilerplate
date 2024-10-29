@@ -4,14 +4,20 @@
 // Vendors
 @forward './vendors';
 
+// Utilities
+@forward './utilities';
+
+// Theme
+@forward './theme';
+
 // Base
 @forward './base';
 
 // Components
 @forward './components';
 
-// Layout
-@forward './layout';
+// Layouts
+@forward './layouts';
 
 // Pages
 @forward './pages';
@@ -19,9 +25,6 @@
 
 // Example Structure
 //  scss/
-//  |
-//  |- __TEMPLATES__
-//  |    |- __MODULE-TEMPLATE__.scss
 //  |
 //  |- abstracts/
 //  |    |- functions/
@@ -37,25 +40,36 @@
 //  |    |   |- _index.scss
 //  |    |
 //  |    |- variables/
-//  |    |   |- _var-colors.scss
-//  |    |   |- _var-fonts.scss
-//  |    |   |- _var-breakpoints.scss
-//  |    |   ...
-//  |    |   |- _index.scss
-//  |    |
-//  |    ...
-//  |    |- _index.scss
+//  |        |- _var-colors.scss
+//  |        |- _var-typography.scss
+//  |        |- _var-breakpoints.scss
+//  |        ...
+//  |        |- _index.scss
 //  |
-//  |- base/
-//  |    |- _root.scss
-//  |    |- _reset.scss
-//  |    |- _typography.scss
+//  |- vendors/
+//  |    |- _bootstrap.scss
+//  |    |- _modern-reset.scss
 //  |    ...
 //  |    |- _index.scss
 //  |
 //  |- utilities/
+//  |    |- _reset.scss
+//  |    |- _root.scss
 //  |    |- _spacing.scss
 //  |    |- _grid.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- themes/
+//  |    |- _font.scss
+//  |    |- _typography.scss
+//  |    |- _theme.scss
+//  |    |- _admin.scss
+//  |    ...
+//  |    |- _index.scss
+//  |
+//  |- base/
+//  |    |- _general.scss (html and body etc.)
 //  |    ...
 //  |    |- _index.scss
 //  |
@@ -69,6 +83,7 @@
 //  |- layout/
 //  |    |- _header.scss
 //  |    |- _sidebar.scss
+//  |    |- _main.scss
 //  |    |- _footer.scss
 //  |    ...
 //  |    |- _index.scss
@@ -76,18 +91,6 @@
 //  |- pages/
 //  |    |- _about.scss
 //  |    |- _contact.scss
-//  |    ...
-//  |    |- _index.scss
-//  |
-//  |- themes/
-//  |    |- _theme.scss
-//  |    |- _admin.scss
-//  |    ...
-//  |    |- _index.scss
-//  |
-//  |- vendors/
-//  |    |- _bootstrap.scss
-//  |    |- _modern-reset.scss
 //  |    ...
 //  |    |- _index.scss
 //  |

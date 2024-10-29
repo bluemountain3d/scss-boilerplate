@@ -1,4 +1,16 @@
 //**** Utilities Index ****//
 
+// CSS Reset (Normalize)
+@forward './reset';
+
+// Root
+@forward './root';
+
+// Spacing classes
+@forward './spacing';
+
+// Grid system
+@forward './grid';
+
 // Utility Name
 // @forward '';
