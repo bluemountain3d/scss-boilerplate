@@ -163,10 +163,10 @@ Each folder (like `abstracts/functions`, `base`, `components`, etc.) contains an
 
 ### Why Use `@use` with Aliases (as `var`, as `fn`, as `mx`)
 1. **Namespace Management**: With `@use`, SASS creates a namespace for each imported file. By defining an alias (like `var` for `variables`), you avoid naming conflicts and keep your code organized. This means if multiple files define a `$primary-color` variable, each file’s value is kept separate under its unique alias.
-```
-// Example usage
-color: var.$primary-color;
-```
+    ```
+    // Example usage
+    color: var.$primary-color;
+    ```
 2. **Improved Readability**: Using descriptive aliases like `var`, `fn`, and `mx` helps immediately clarify the purpose of each imported item:
 - `var` for variables
 - `fn` for functions
@@ -174,7 +174,8 @@ color: var.$primary-color;
 This makes your SASS easier to read, especially in larger projects where it’s helpful to see at a glance what type of asset you’re referencing.
 3. **Scoped Imports for Better Maintenance**: By using `@use` with aliases, you limit each import to its defined namespace. This prevents global scope pollution, making it easier to refactor and maintain your code, as you know exactly where each variable, function, or mixin originates.
 4. **Consistent Naming**: Establishing consistent naming conventions across your imports—like always using `var`, `fn`, and `mx`—allows any developer working on the project to understand the structure immediately. This consistency can save time and reduce errors in large codebases.
-##### Example of Aliased Imports
+
+### Example of Aliased Imports
 ```
 @use '../abstracts/variables' as var; // All variables are scoped under 'var'
 @use '../abstracts/functions' as fn;  // All functions are scoped under 'fn'
