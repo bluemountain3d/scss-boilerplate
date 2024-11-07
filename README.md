@@ -53,7 +53,8 @@ This document explains the SASS 7-1 folder structure, organized for modularity, 
 //  |    |- _index.scss
 //  |
 //  |- base/
-//  |    |- _general.scss
+//  |    |- _html.scss
+//  |    |- _body.scss
 //  |    ...
 //  |    |- _index.scss
 //  |
