@@ -1,0 +1,94 @@
+//*** Abstracts Function: Px to Rem and reverse ***//
+
+@use '../variables' as var;
+
+@use 'sass:math';
+
+
+/// Converts pixel value to rem value
+/// @param {number} $px - Value in pixels to convert
+/// @param {number} $base [16] - Base font size in pixels
+/// @param {boolean} $unitless [false] - Whether to return a unitless number
+/// @return {number} Value in rem units (or unitless if specified)
+@function px-to-rem(
+  $px,
+  $base: 16,
+  $unitless: false
+) {
+  $result: math.div($px, $base);
+  @return if($unitless, $result, $result * 1rem);
+}
+
+/// Converts rem value to pixel value
+/// @param {number} $rem - Value in rem to convert
+/// @param {number} $base [16] - Base font size in pixels
+/// @param {boolean} $unitless [false] - Whether to return a unitless number
+/// @return {number} Value in pixels (or unitless if specified)
+@function rem-to-px(
+  $rem,
+  $base: 16,
+  $unitless: false
+) {
+  $result: $rem * $base;
+  @return if($unitless, $result, $result * 1px);
+}
+
+
+/// Converts pixel value to point value
+/// @param {number} $px - Value in pixels to convert
+/// @param {boolean} $unitless [false] - Whether to return a unitless number
+/// @return {number} Value in points (or unitless if specified)
+@function px-to-pt(
+  $px,
+  $unitless: false
+) {
+  // 1pt = 1.333333px (72pt/inch / 96px/inch)
+  $result: math.div($px, 1.333333);
+  @return if($unitless, $result, $result * 1pt);
+}
+
+/// Converts point value to pixel value
+/// @param {number} $pt - Value in points to convert
+/// @param {boolean} $unitless [false] - Whether to return a unitless number
+/// @return {number} Value in pixels (or unitless if specified)
+@function pt-to-px(
+  $pt,
+  $unitless: false
+) {
+  // 1px = 0.75pt (96px/inch / 72pt/inch)
+  $result: $pt * 1.333333;
+  @return if($unitless, $result, $result * 1px);
+}
+
+
+/// Converts rem value to point value
+/// @param {number} $rem - Value in rem to convert
+/// @param {number} $base [16] - Base font size in pixels
+/// @param {boolean} $unitless [false] - Whether to return a unitless number
+/// @return {number} Value in points (or unitless if specified)
+@function rem-to-pt(
+  $rem,
+  $base: 16,
+  $unitless: false
+) {
+  // First convert rem to px (rem * base), then px to pt
+  $px: $rem * $base;
+  $result: math.div($px, 1.333333);
+  @return if($unitless, $result, $result * 1pt);
+}
+
+/// Converts point value to rem value
+/// @param {number} $pt - Value in points to convert
+/// @param {number} $base [16] - Base font size in pixels
+/// @param {boolean} $unitless [false] - Whether to return a unitless number
+/// @return {number} Value in rem (or unitless if specified)
+@function pt-to-rem(
+  $pt,
+  $base: 16,
+  $unitless: false
+) {
+  // First convert pt to px (pt * 1.333333), then px to rem
+  $px: $pt * 1.333333;
+  $result: math.div($px, $base);
+  @return if($unitless, $result, $result * 1rem);
+}

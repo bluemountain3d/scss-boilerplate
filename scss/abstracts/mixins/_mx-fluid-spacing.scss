@@ -1,0 +1,159 @@
+//*** Abstracts Mixin: Spacing ***//
+
+@use '../variables' as var;
+@use '../functions' as fn;
+
+
+//* Table of content
+// 1. Mixin for crearting custom properties
+// 2. Mixin for crearting utility classes
+
+//* 1.
+/// A fluid spacing mixin that generates Widthponsive size scales
+/// @param {string} $prefix ['gap'] - Prefix for the generated variables
+/// @param {string} $method ['clamp'] - Fluid sizing method ('clamp' or 'max')
+/// @param {number} $remSize [16] - Base rem size in pixels
+/// @param {number} $baseline [var.$base-line-size] - Base scale unit in pixels
+/// @param {number} $size-multiplier [2] - Multiplier between minimum and maximum sizes in the fluid range
+/// @param {number} $minWidth [map-get(var.$size-base, 'min-width')] - Minimum viewport width for fluid scaling
+/// @param {number} $maxWidth [map-get(var.$size-base, 'max-width')] - Maximum viewport width for fluid scaling
+/// @param {number} $decimals [map-get(var.$size-base, 'decimals')] - Number of decimal places for rounding
+/// @param {list} $include-weights [null] - Optional list of weights to include (filters the weight map)
+/// @param {map} $custom-weights [null] - Optional map of custom weight steps and their multipliers
+/// @param {boolean} $debug [false] - Enable debug logging
+@mixin fluid-spacing-var (
+  $prefix: 'gap',
+  $method: 'clamp',
+  $remSize: 16,
+  $baseline: var.$base-line-size,
+  $size-multiplier: 2,
+  $minWidth: map-get(var.$size-base, 'min-width'),
+  $maxWidth: map-get(var.$size-base, 'max-width'),
+  $decimals: map-get(var.$size-base, 'decimals'),
+  $include-weights: null,
+  $custom-weights: null,
+  $vwx: false,
+  $debug: false
+) {
+
+  // Strip possible units
+  $remSize: fn.strip-unit($remSize);
+  $baseline: fn.strip-unit($baseline);
+  $minWidth: fn.strip-unit($minWidth);
+  $maxWidth: fn.strip-unit($maxWidth);
+
+  // Use custom weights if provided, otherwise use defaults
+  $weights: if($custom-weights, $custom-weights, var.$spacing-weights);
+
+  // Filter weights if $include-weights is provided
+  @if $include-weights != null {
+    $weights: fn.map-filter($weights, $include-weights);
+  }
+
+  // Generate custom properties for each weight
+  @each $weight, $step in $weights {
+
+    // Calculate size based on baseline
+    $minSize: $baseline * $step;
+    $maxSize: $minSize * $size-multiplier;
+
+    $size: fn.calc-fluid-size(
+      $remSize,
+      $minWidth,
+      $maxWidth,
+      $decimals,
+      $method,
+      $minSize,
+      $maxSize,
+      $vwx: $vwx
+    );
+
+    // Debug output
+    @if $debug {
+      @debug "Weight: #{$weight}, Step: #{$step}, Size: #{$size}";
+    }
+
+    --#{$prefix}-#{$weight}: #{$size};
+  }
+}
+
+//* 2.
+/// A fluid spacing mixin that generates Widthponsive size scales
+/// @param {string} $prefix ['margin'] - Prefix for the generated classes
+/// @param {string} $property ['margin'] - CSS property to generate values for
+/// @param {string} $method ['clamp'] - Fluid sizing method ('clamp' or 'max')
+/// @param {number} $remSize [16] - Base rem size in pixels
+/// @param {number} $baseline [var.$base-line-size] - Base scale unit in pixels
+/// @param {number} $minWidth [map-get(var.$size-base, 'min-width')] - Minimum viewport width for fluid scaling
+/// @param {number} $maxWidth [map-get(var.$size-base, 'max-width')] - Maximum viewport width for fluid scaling
+/// @param {number} $decimals [map-get(var.$size-base, 'decimals')] - Number of decimal places for rounding
+/// @param {list} $include-weights [null] - Optional list of weights to include (filters the weight map)
+/// @param {number} $size-multiplier [2] - Multiplier between minimum and maximum sizes in the fluid range
+/// @param {map} $custom-weights [null] - Optional map of custom weight steps and their multipliers
+/// @param {boolean} $debug [false] - Enable debug logging
+@mixin fluid-spacing-util (
+  $prefix: 'margin',
+  $property: 'margin',
+  $method: 'clamp',
+  $remSize: 16,
+  $baseline: var.$base-line-size,
+  $size-multiplier: 2,
+  $minWidth: map-get(var.$size-base, 'min-width'),
+  $maxWidth: map-get(var.$size-base, 'max-width'),
+  $decimals: map-get(var.$size-base, 'decimals'),
+  $include-weights: null,
+  $custom-weights: null,
+  $vwx: false,
+  $debug: false
+) {
+
+  // Strip possible units
+  $remSize: fn.strip-unit($remSize);
+  $baseline: fn.strip-unit($baseline);
+  $minWidth: fn.strip-unit($minWidth);
+  $maxWidth: fn.strip-unit($maxWidth);
+
+  // Use custom weights if provided, otherwise use defaults
+  $weights: if($custom-weights, $custom-weights, var.$spacing-weights);
+
+  // Filter weights if $include-weights is provided
+  @if $include-weights != null {
+    $weights: fn.map-filter($weights, $include-weights);
+  }
+
+  // Generate custom properties for each weight
+  @each $weight, $step in $weights {
+
+    // Calculate size based on baseline
+    $minSize: $baseline * $step;
+    $maxSize: $minSize * $size-multiplier;
+
+    $size: fn.calc-fluid-size(
+      $remSize,
+      $minWidth,
+      $maxWidth,
+      $decimals,
+      $method,
+      $minSize,
+      $maxSize,
+      $vwx: $vwx
+    );
+
+    // Debug output
+    @if $debug {
+      @debug "Weight: #{$weight}, Step: #{$step}, Size: #{$size}";
+    }
+
+    // Output CSS
+    .#{$class-name}-#{$weight} { #{$property}: #{$size} !important;}
+  }
+}
+
+
+
+// Calculate size
+// $size: #{if(
+//   $method == 'clamp',
+//   Clamp(#{$roundedMinSizeRem}rem, #{$roundedIntersection}rem + #{$roundedSlope} * var(--vwx), #{$roundedMaxSizeRem}rem),
+//   Max(#{$roundedMinSizeRem}rem, #{$roundedIntersection}rem + #{$roundedSlope} * var(--vwx))
+// )};

@@ -4,11 +4,41 @@
 @use '../abstracts/functions' as fn;
 @use '../abstracts/mixins' as mx;
 
-$_module-name: "Typography";
+@use 'sass:math';
+
+
+$_module-name: 'Typography';
 
 /* ### #{$_module-name} START */
 
 
+:root {
+  @include mx.fluid-font-size-var(
+    $prefix: 'fs', 
+    $vwx: true, 
+    $method: 'clamp'
+  );
+
+  @include mx.fluid-font-size-var(
+    $prefix: 'text', 
+    $minScale: 1.125,
+    $maxScale: 1.125,
+    $vwx: true, 
+    $method: 'clamp',
+    $include-sizes: (100, 200, 300, 400, 500)
+  );
+
+  // Leading
+  $value: 100;
+  @while $value <= 200 {
+    --leading-#{$value}: #{math.div($value, 100)}em;
+    $value: $value + 5;
+  }
+}
+
 
 /* ### #{$_module-name} END
 /* ------------------------------------------------------------ */
+
+
+// _mx-media-queries.scss

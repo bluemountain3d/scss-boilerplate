@@ -1,19 +1,19 @@
-// Copy the code underneath to a new file in another folder.
-// Set "$_module-name" attribute for the module
+//*** Base: HTML ***//
 
-// Name Spaces for common abtracts
 @use '../abstracts/variables' as var;
 @use '../abstracts/functions' as fn;
 @use '../abstracts/mixins' as mx;
 
-// Module Name
-$_module-name: "Module";
+$_module-name: "HTML";
 
 /* ### #{$_module-name} START */
 
-
-
-
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+  font-size: 100%;
+  line-height: 1.2;
+}
 
 
 /* ### #{$_module-name} END

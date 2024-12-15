@@ -1,13 +1,49 @@
-//*** Root Globals ***//
+//*** Utilities Spacing ***//
 
 @use '../abstracts/variables' as var;
 @use '../abstracts/functions' as fn;
 @use '../abstracts/mixins' as mx;
 
-$_module-name: "Spacing utility classes";
+@use 'sass:math';
+
+$_module-name: 'Spacing custom properties & utility classes';
 
 /* ### #{$_module-name} START */
 
+:root {
+  // Gap Sizes
+  @include mx.fluid-spacing-var(
+    $prefix: 'gap', 
+    $vwx: true, 
+    $method: 'clamp'
+  );
+
+  // Section Vertical spacing
+  @include mx.fluid-spacing-var(
+    $prefix: 'gap', 
+    $vwx: true, 
+    $method: 'clamp',
+    $custom-weights: ('section': 4),
+    $size-multiplier: 3
+  );
+}
+
+// $_spacing-weights: (025, 050, 075,100, 150, 200, 250, 300, 350, 400, 450, 500);
+// @include mx.fluid-spacing-util($prefix: 'margin', $property: 'margin', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'margin-x', $property: 'margin-inline', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'margin-x-start', $property: 'margin-inline-start', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'margin-x-end', $property: 'margin-inline-end', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'margin-y', $property: 'margin-block', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'margin-y-start', $property: 'margin-block-start', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'margin-y-end', $property: 'margin-block-end', $include-weights: $_spacing-weights);
+
+// @include mx.fluid-spacing-util($prefix: 'padding', $property: 'padding', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'padding-x', $property: 'padding-inline', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'padding-x-start', $property: 'padding-inline-start', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'padding-x-end', $property: 'padding-inline-end', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'padding-y', $property: 'padding-block', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'padding-y-start', $property: 'padding-block-start', $include-weights: $_spacing-weights);
+// @include mx.fluid-spacing-util($prefix: 'padding-y-end', $property: 'padding-block-end', $include-weights: $_spacing-weights);
 
 
 /* ### #{$_module-name} END

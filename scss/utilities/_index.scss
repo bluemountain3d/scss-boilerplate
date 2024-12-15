@@ -1,16 +1,32 @@
 //**** Utilities Index ****//
 
-// CSS Reset (Normalize)
+// 1. CSS Reset (Normalize)
+// Browser consistency baseline
 @forward './reset';
 
-// Root
-@forward './root';
+// 2. Math & Viewport
+// Mathematical constants and viewport units
+@forward './math-viewport';
 
-// Spacing classes
+// 3. Accessibility Helpers
+// A11y utilities and screen reader classes
+@forward './a11y-helpers';
+
+// 4. Spacing
+// Custom properties and utility classes
 @forward './spacing';
 
-// Grid system
+// 5. Grid System
+// Grid layout utilities
 @forward './grid';
 
 // Utility Name
 // @forward '';
+
+
+// Additional Utility Partials
+// @forward './display';
+// @forward './position';
+// @forward './flexbox';
+// @forward './float';
+// @forward './overflow';

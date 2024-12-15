@@ -1,0 +1,22 @@
+//*** Abstracts Function: Name ***//
+
+@use '../variables' as var;
+
+
+/**
+ * Utility function to filter weights based on inclusion list.
+ * Accepts a map of weights and a list of keys to include.
+ */
+/// Filters a map to only include specified keys
+/// @param {map} $map - Original map to filter
+/// @param {list} $include-list - List of keys to include in filtered map
+/// @return {map} New map containing only the specified keys
+@function map-filter($map, $include-list) {
+  $filtered: ();
+  @each $key, $value in $map {
+    @if index($include-list, $key) {
+      $filtered: map-merge($filtered, ($key: $value));
+    }
+  }
+  @return $filtered;
+}

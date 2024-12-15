@@ -1,14 +1,22 @@
-//*** Page specific styles for: About ***//
+//*** [FOLDER]: <MODULE NAME> ***//
+//* Description of the module's purpose
 
 @use '../abstracts/variables' as var;
 @use '../abstracts/functions' as fn;
 @use '../abstracts/mixins' as mx;
 
-$_module-name: 'Page specific styles for: About';
+// Module Name
+$_module-name: 'Module';
 
 /* ### #{$_module-name} START */
 
+// Module variables
+$_module-specific-variable: value;
 
+// Module styles
+.module-name {
+  // Properties
+}
 
 /* ### #{$_module-name} END
 /* ------------------------------------------------------------ */

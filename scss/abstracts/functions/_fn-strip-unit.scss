@@ -1,0 +1,18 @@
+//*** Abstracts Function: Strip Unit ***//
+
+@use '../variables' as var;
+
+@use 'sass:math';
+
+/// Removes units from a number if present
+/// @param {number} $value - Number with optional unit
+/// @return {number} Number without unit
+/// # strip-unit(16px) => 16
+/// # strip-unit(1.5rem) => 1.5
+/// # strip-unit(100%) => 100
+@function strip-unit($value) {
+  @if not math.is-unitless($value) {
+    $value: math.div($value, ($value * 0 + 1));
+  }
+  @return $value;
+}

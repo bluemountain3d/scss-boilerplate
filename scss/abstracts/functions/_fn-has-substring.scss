@@ -1,0 +1,12 @@
+//*** Abstracts Function: Has Substring ***//
+
+@use '../variables' as var;
+
+
+/// Checks if a string contains a specific substring
+/// @param {String} $string - The string to search within
+/// @param {String} $substring - The substring to search for
+/// @return {Boolean} True if substring is found, false otherwise
+@function has-substring($string, $substring) {
+  @return str-index($string, $substring) != null;
+}

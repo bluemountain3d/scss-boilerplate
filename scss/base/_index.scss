@@ -1,7 +1,16 @@
 //**** Base Index ****//
 
-// Generals like html and body
-@forward './general';
+// HTML
+@forward './html';
+
+// Body
+@forward './body';
+
+// Main
+@forward './main';
+
+// Form
+@forward './form';
 
 // Name
 //@forward '';

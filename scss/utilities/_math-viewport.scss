@@ -1,0 +1,29 @@
+//*** Utilities Math & Viewport ***//
+
+@use '../abstracts/variables' as var;
+@use '../abstracts/functions' as fn;
+@use '../abstracts/mixins' as mx;
+
+@use 'sass:math';
+
+$_module-name: 'Math & Viewport';
+
+/* ### #{$_module-name} START */
+
+:root {
+  //* Mathematical constants
+  --pi: 3.1415926536;                         // The number π
+  --phi: #{math.div(1 + sqrt(5), 2)};         // Golden Ratio phi φ
+  --sqrt-2: #{sqrt(2)};                       // Square root of 2
+
+  //* Viewport variables
+  --vwx: 1vw;                                 // Responsive viewport unit
+
+  // Ultra wide screens adjustment
+  @include mx.for-ultra-wide {
+    --vwx: 2vh;
+  }
+}
+
+/* ### #{$_module-name} END
+/* ------------------------------------------------------------ */

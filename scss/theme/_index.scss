@@ -1,13 +1,20 @@
 //**** Theme Index ****//
 
-// Theme Fonts
+// 1. Theme Font Faces
+// Load and define custom fonts
 @forward './fonts';
 
-// Theme Colors
+// 2. Theme Colors
+// Color schemes and palettes
 @forward './colors';
 
-// Theme Typography
+// 3. Theme Typography
+// Typography scales and styles
 @forward './typography';
 
 // Theme partial
 // @forward '';
+
+// Additional Theme Partials
+// @forward './custom-theme';
+// @forward './print';
