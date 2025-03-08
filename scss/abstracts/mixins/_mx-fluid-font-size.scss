@@ -4,38 +4,42 @@
 @use '../functions' as fn;
 
 @use "sass:math";
+@use "sass:map";
 
 //* Table of content
 // 1. Mixin for crearting custom properties
 // 2. Mixin for crearting utility classes
+// 3. Combined Mixin for crearting either ucustom properties or tility classes
 
-//* 1.
-/// Generates fluid font size CSS custom properties using type scale calculations
-/// @param {string} $prefix ['fs'] - Prefix for the generated custom properties
-/// @param {string} $method ['clamp'] - Fluid sizing method ('clamp' or 'max')
-/// @param {number} $remSize [16] - Base font size in pixels for rem calculations
-/// @param {number} $minBase [16] - Minimum base font size in pixels
-/// @param {number} $maxBase [20] - Maximum base font size in pixels
-/// @param {number} $minWidth [384] - Minimum viewport width in pixels where fluid scaling begins
-/// @param {number} $maxWidth [1920] - Maximum viewport width in pixels where fluid scaling stops
-/// @param {number} $minScale [1.25] - Minimum type scale ratio for smallest viewport
-/// @param {number} $maxScale [1.333] - Maximum type scale ratio for largest viewport
-/// @param {number} $decimals [6] - Number of decimal places for rounding calculations
-/// @param {list} $include-sizes [null] - Optional list of size keys to include (filters the size map)
-/// @param {map} $custom-sizes [null] - Optional map of custom size steps and their scale values
-/// @param {boolean} $vwx [false] - Whether to use CSS custom property --vwx instead of vw units
-/// @param {boolean} $debug [false] - Enable debug logging of size calculations
+/** 1.
+ * Generates fluid font size CSS custom properties using type scale calculations
+ * @param {string} $prefix ['fs'] - Prefix for the generated custom properties
+ * @param {string} $method ['clamp'] - Fluid sizing method ('clamp' or 'max')
+ * @param {number} $remSize [16] - Base font size in pixels for rem calculations
+ * @param {number} $minBase [16] - Minimum base font size in pixels
+ * @param {number} $maxBase [20] - Maximum base font size in pixels
+ * @param {number} $minWidth [384] - Minimum viewport width in pixels where fluid scaling begins
+ * @param {number} $maxWidth [1920] - Maximum viewport width in pixels where fluid scaling stops
+ * @param {number} $minScale [1.25] - Minimum type scale ratio for smallest viewport
+ * @param {number} $maxScale [1.333] - Maximum type scale ratio for largest viewport
+ * @param {number} $decimals [6] - Number of decimal places for rounding calculations
+ * @param {list} $include-sizes [null] - Optional list of size keys to include (filters the size map)
+ * @param {map} $custom-sizes [null] - Optional map of custom size steps and their scale values
+ * @param {boolean} $vwx [false] - Whether to use CSS custom property --vwx instead of vw units
+ * @param {boolean} $debug [false] - Enable debug logging of size calculations
+ * @output {--prefix-n: clamp()|max() where n represents the type scale step}
+ */
 @mixin fluid-font-size-var(
   $prefix: 'fs',
   $method: 'clamp',
   $remSize: 16,
-  $minBase:  map-get(var.$size-base, 'min-size'), // Min base font size in px (16px)
-  $maxBase:  map-get(var.$size-base, 'max-size'), // Max base font size in px (20px)
-  $minWidth: map-get(var.$size-base, 'min-width'), // Min viewport width in px (384px)
-  $maxWidth: map-get(var.$size-base, 'max-width'), // Max viewport with in px (1920px)
-  $minScale: map-get(var.$size-base, 'min-scale'), // Min type scale as decimal value (1.25)
-  $maxScale: map-get(var.$size-base, 'max-scale'), // Max type scale as decimal value (1.333)
-  $decimals: map-get(var.$size-base, 'decimals'), // Number of decimal points as integer (6)
+  $minBase:  map.get(var.$size-base, 'min-size'), // Min base font size in px (16px)
+  $maxBase:  map.get(var.$size-base, 'max-size'), // Max base font size in px (20px)
+  $minWidth: map.get(var.$size-base, 'min-width'), // Min viewport width in px (384px)
+  $maxWidth: map.get(var.$size-base, 'max-width'), // Max viewport with in px (1920px)
+  $minScale: map.get(var.$size-base, 'min-scale'), // Min type scale as decimal value (1.25)
+  $maxScale: map.get(var.$size-base, 'max-scale'), // Max type scale as decimal value (1.333)
+  $decimals: map.get(var.$size-base, 'decimals'), // Number of decimal points as integer (6)
   $include-sizes: null,
   $custom-sizes: null,
   $vwx: false,
@@ -91,33 +95,35 @@
 }
 
 
-//* 2.
-/// Generates fluid font size utility classes using type scale calculations
-/// @param {string} $prefix ['fs'] - Prefix for the generated custom properties
-/// @param {string} $method ['clamp'] - Fluid sizing method ('clamp' or 'max')
-/// @param {number} $remSize [16] - Base rem size in pixels
-/// @param {number} $minBase [map-get(var.$size-base, 'min-size')] - Minimum base font size in pixels (e.g., 16px)
-/// @param {number} $maxBase [map-get(var.$size-base, 'max-size')] - Maximum base font size in pixels (e.g., 20px) 
-/// @param {number} $minWidth [map-get(var.$size-base, 'min-width')] - Minimum viewport width in pixels for fluid scaling
-/// @param {number} $maxWidth [map-get(var.$size-base, 'max-width')] - Maximum viewport width in pixels for fluid scaling
-/// @param {number} $minScale [map-get(var.$size-base, 'min-scale')] - Minimum type scale ratio (e.g., 1.25)
-/// @param {number} $maxScale [map-get(var.$size-base, 'max-scale')] - Maximum type scale ratio (e.g., 1.333)
-/// @param {number} $decimals [map-get(var.$size-base, 'decimals')] - Number of decimal places for rounding
-/// @param {list} $include-sizes [null] - Optional list of size keys to include (filters the size map)
-/// @param {map} $custom-sizes [null] - Optional map of custom size steps and their scale values
-/// @param {boolean} $vwx [false] - Whether to use the --vwx CSS variable instead of vw units
-/// @param {boolean} $debug [false] - Enable debug logging of size calculations
+/** 2.
+ * Generates fluid font size utility classes using type scale calculations
+ * @param {string} $prefix ['fs'] - Prefix for the generated custom properties
+ * @param {string} $method ['clamp'] - Fluid sizing method ('clamp' or 'max')
+ * @param {number} $remSize [16] - Base rem size in pixels
+ * @param {number} $minBase [map.get(var.$size-base, 'min-size')] - Minimum base font size in pixels (e.g., 16px)
+ * @param {number} $maxBase [map.get(var.$size-base, 'max-size')] - Maximum base font size in pixels (e.g., 20px) 
+ * @param {number} $minWidth [map.get(var.$size-base, 'min-width')] - Minimum viewport width in pixels for fluid scaling
+ * @param {number} $maxWidth [map.get(var.$size-base, 'max-width')] - Maximum viewport width in pixels for fluid scaling
+ * @param {number} $minScale [map.get(var.$size-base, 'min-scale')] - Minimum type scale ratio (e.g., 1.25)
+ * @param {number} $maxScale [map.get(var.$size-base, 'max-scale')] - Maximum type scale ratio (e.g., 1.333)
+ * @param {number} $decimals [map.get(var.$size-base, 'decimals')] - Number of decimal places for rounding
+ * @param {list} $include-sizes [null] - Optional list of size keys to include (filters the size map)
+ * @param {map} $custom-sizes [null] - Optional map of custom size steps and their scale values
+ * @param {boolean} $vwx [false] - Whether to use the --vwx CSS variable instead of vw units
+ * @param {boolean} $debug [false] - Enable debug logging of size calculations
+ * @output {--prefix-n: clamp()|max() where n represents the type scale step}
+ */
 @mixin fluid-font-size-util(
   $prefix: 'fs',
   $method: 'clamp',
   $remSize: 16,
-  $minBase:  map-get(var.$size-base, 'min-size'), // Min base font size in px (16px)
-  $maxBase:  map-get(var.$size-base, 'max-size'), // Max base font size in px (20px)
-  $minWidth: map-get(var.$size-base, 'min-width'), // Min viewport width in px (384px)
-  $maxWidth: map-get(var.$size-base, 'max-width'), // Max viewport with in px (1920px)
-  $minScale: map-get(var.$size-base, 'min-scale'), // Min type scale as decimal value (1.25)
-  $maxScale: map-get(var.$size-base, 'max-scale'), // Max type scale as decimal value (1.333)
-  $decimals: map-get(var.$size-base, 'decimals'), // Number of decimal points as integer (6)
+  $minBase:  map.get(var.$size-base, 'min-size'), // Min base font size in px (16px)
+  $maxBase:  map.get(var.$size-base, 'max-size'), // Max base font size in px (20px)
+  $minWidth: map.get(var.$size-base, 'min-width'), // Min viewport width in px (384px)
+  $maxWidth: map.get(var.$size-base, 'max-width'), // Max viewport with in px (1920px)
+  $minScale: map.get(var.$size-base, 'min-scale'), // Min type scale as decimal value (1.25)
+  $maxScale: map.get(var.$size-base, 'max-scale'), // Max type scale as decimal value (1.333)
+  $decimals: map.get(var.$size-base, 'decimals'), // Number of decimal points as integer (6)
   $include-sizes: null,
   $custom-sizes: null,
   $vwx: false,
@@ -168,16 +174,106 @@
     }
     
     // Output CSS
-    --#{$prefix}-#{$sizeName}: #{$size};
+    .#{$prefix}-#{$sizeName} {
+      font-size: #{$size};
+    }
   }
 }
 
 
-// Output CSS
-// @if $type in ('var', 'variable', 'custom-property', 'vars', 'variables') {
-//   --#{$prefix}-#{$weight}: #{$size};
-// } @else if $type in ('util', 'uc', 'utility-class', 'class', 'utils', 'classes') {
-//   .#{$prefix}-#{$weight} { 
-//     #{$property}: #{$size};
-//   }
-// }
+
+/** 3.
+ * Generates fluid font size CSS custom properties or utility classes using type scale calculations
+ * @param {string} $type ['var'] - Output type: 'var' for custom properties, 'util' for utility classes
+ * @param {string} $prefix ['fs'] - Prefix for the generated properties or classes
+ * @param {string} $method ['clamp'] - Fluid sizing method ('clamp' or 'max')
+ * @param {number} $remSize [16] - Base font size in pixels for rem calculations
+ * @param {number} $minBase [map.get(var.$size-base, 'min-size')] - Minimum base font size in pixels
+ * @param {number} $maxBase [map.get(var.$size-base, 'max-size')] - Maximum base font size in pixels
+ * @param {number} $minWidth [map.get(var.$size-base, 'min-width')] - Minimum viewport width in pixels
+ * @param {number} $maxWidth [map.get(var.$size-base, 'max-width')] - Maximum viewport width in pixels
+ * @param {number} $minScale [map.get(var.$size-base, 'min-scale')] - Minimum type scale ratio
+ * @param {number} $maxScale [map.get(var.$size-base, 'max-scale')] - Maximum type scale ratio
+ * @param {number} $decimals [map.get(var.$size-base, 'decimals')] - Number of decimal places
+ * @param {list} $include-sizes [null] - Optional list of size keys to include
+ * @param {map} $custom-sizes [null] - Optional map of custom size steps and their scale values
+ * @param {boolean} $vwx [false] - Use CSS custom property --vwx instead of vw units
+ * @param {boolean} $debug [false] - Enable debug logging of size calculations
+ * @output {--prefix-n: clamp()|max() for 'var', .prefix-n { font-size: clamp()|max() } for 'util'}
+ */
+ @mixin fluid-font-size(
+  $type: 'var',
+  $prefix: 'fs',
+  $method: 'clamp',
+  $remSize: 16,
+  $minBase: map.get(var.$size-base, 'min-size'),
+  $maxBase: map.get(var.$size-base, 'max-size'),
+  $minWidth: map.get(var.$size-base, 'min-width'),
+  $maxWidth: map.get(var.$size-base, 'max-width'),
+  $minScale: map.get(var.$size-base, 'min-scale'),
+  $maxScale: map.get(var.$size-base, 'max-scale'),
+  $decimals: map.get(var.$size-base, 'decimals'),
+  $include-sizes: null,
+  $custom-sizes: null,
+  $vwx: false,
+  $debug: false
+) {
+  // Strip possible units
+  $remSize: fn.strip-unit($remSize);
+  $minBase: fn.strip-unit($minBase);
+  $maxBase: fn.strip-unit($maxBase);
+  $minWidth: fn.strip-unit($minWidth);
+  $maxWidth: fn.strip-unit($maxWidth);
+
+  // Use custom sizes if provided, otherwise use defaults
+  $sizes: if($custom-sizes, $custom-sizes, var.$font-sizes);
+
+  // Filter sizes if $include-sizes is provided
+  @if $include-sizes != null {
+    $sizes: fn.map-filter($sizes, $include-sizes);
+  }
+
+  // Validate $type
+  $valid-types: ('var', 'variable', 'custom-property', 'vars', 'variables', 'util', 'uc', 'utility-class', 'class', 'utils', 'classes');
+  @if index($valid-types, $type) == null {
+    @error "Invalid $type '#{$type}'. Must be one of: #{$valid-types}";
+  }
+
+  // Generate output for each size
+  @each $sizeName, $step in $sizes {
+    // Calculate size based on type scale
+    $minSize: $minBase * math.pow($minScale, $step);
+    $maxSize: $maxBase * math.pow($maxScale, $step);
+
+    $size: fn.calc-fluid-size(
+      $remSize,
+      $minWidth,
+      $maxWidth,
+      $decimals,
+      $method,
+      $minSize,
+      $maxSize,
+      $vwx: $vwx
+    );
+
+    // Debug output
+    @if $debug {
+      @debug "Size Name: #{$sizeName}";
+      @debug "Scale Step: #{$step}";
+      @debug "Min Base: #{$minBase}px at #{$minScale} scale = #{$minSize}px (#{math.div($minSize, $remSize)}rem)";
+      @debug "Max Base: #{$maxBase}px at #{$maxScale} scale = #{$maxSize}px (#{math.div($maxSize, $remSize)}rem)";
+      @debug "Viewport Range: #{$minWidth}px to #{$maxWidth}px";
+      @debug "Final Value: #{$size}";
+      @debug "-------------------";
+    }
+
+    // Output CSS based on $type
+    @if index(('var', 'variable', 'custom-property', 'vars', 'variables'), $type) {
+      --#{$prefix}-#{$sizeName}: #{$size};
+    } @else if index(('util', 'uc', 'utility-class', 'class', 'utils', 'classes'), $type) {
+      .#{$prefix}-#{$sizeName} {
+        font-size: #{$size};
+      }
+    }
+  }
+}
