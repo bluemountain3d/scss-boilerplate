@@ -1,5 +1,8 @@
 //*** Abstracts Variables: Typography ***//
 
+@use 'sass:map';
+@use 'sass:math';
+
 // Base font size
 $base-font-size: 100%;
 
@@ -15,3 +18,289 @@ $font-sizes: (
   800: 5,
   900: 6
 );
+
+/**
+ * Font System Configuration
+ * -----------------------
+ * Defines the standardized font names used throughout the application's style system.
+ * These are internal reference names that map to actual font-family declarations
+ * in the font-face implementations.
+ * 
+ * Hierarchical Categories:
+ * - $primary-font:    Used for primary headings and key visual elements
+ * - $secondary-font:  Used for subheadings and supporting text
+ * - $tertiary-font:   Used for body text and longer form content
+ * 
+ * Functional Categories:
+ * - $display-font:    Large-scale typographic elements and hero text
+ * - $serif-font:      Traditional serif typeface for long-form reading
+ * - $sans-font:       Clean sans-serif for UI elements and short text
+ * - $mono-font:       Monospace font for code and technical content
+ * - $quote-font:      Stylized font for pullquotes and testimonials
+ * 
+ * Note: These are internal reference names only and should be mapped
+ * to actual font-family declarations in the implementation.
+ */
+$primary-font: 'canto-pen';
+$secondary-font: 'spectral';
+$tertiary-font: 'cronos-pro';
+
+$display-font: 'canto-pen';
+$serif-font: 'spectral';
+$sans-font: 'cronos-pro';
+$quote-font: 'spectral';
+$mono-font: 'anonymous';
+
+/**
+ * Font Metrics Configuration Map
+ * ----------------------------
+ * Defines the core metrics for each typeface in the system. These values are used
+ * to calculate precise typography and maintain consistent vertical rhythm.
+ * All measurements are expressed as ratios relative to the font's em-square (1000 units).
+ * 
+ * Metrics Properties:
+ * - font-family:  The actual CSS font-family name
+ * - cap-height:   Height of capital letters from baseline
+ * - x-height:     Height of lowercase 'x' from baseline
+ * - d-height:     Total height of lowercase characters with ascenders
+ * - ch-width:     Average character width (used for sizing calculations)
+ * - lsb-avarage:  Avarage empty space (in em) on the left side of upper case characters A-Z
+ * - ascender:     Maximum upward extension of the font from baseline
+ * - descender:    Maximum downward extension of the font from baseline
+ * 
+ * Usage:
+ * These metrics enable precise typography calculations and can be accessed using
+ * SASS map functions, e.g.:
+ * map-get(map-get($font-metrics, 'trajan'), 'cap-height')
+ */
+ $font-metrics: (
+  'canto-pen': (
+    'font-family'   : '"Canto Pen"',
+    'cap-height'    : 0.621,
+    'ch-width'      : 0.497,
+    'lsb-avarage'   : 0.0379,
+    'ascender'      : 0.692,
+    'descender'     : 0.308,
+  ),
+
+  'cronos-pro': (
+    'font-family'   : '"Cronos Pro"',
+    'cap-height'    : 0.624,
+    'ch-width'      : 0.478,
+    'lsb-avarage'   : 0.0448,
+    'ascender'      : 0.78,
+    'descender'     : 0.22,
+  ),
+
+  'spectral': (
+    'font-family'   : '"Spectral"',
+    'cap-height'    : 0.660,
+    'x-height'      : 0.450,
+    'd-height'      : 0.750,
+    'ch-width'      : 0.592,
+    'lsb-avarage'   : 0.0570,
+    'ascender'      : 0.830,
+    'descender'     : 0.170
+  ),
+
+  'anonymous': (
+    'font-family'   : '"Anonymous Pro"',
+    'cap-height'    : 0.637,
+    'x-height'      : 0.455,
+    'd-height'      : 0.637,
+    'ch-width'      : 0.546,
+    'lsb-avarage'   : 0.0104,
+    'ascender'      : 0.817,
+    'descender'     : 0.183
+  )
+);
+
+// Help function
+@function get-font-metric($font-name, $property) {
+  @return map.get(map.get($font-metrics, $font-name), $property);
+}
+
+@function get-cap-ratio($font-name) {
+  @return math.div(get-font-metric($primary-font, 'cap-height'), get-font-metric($font-name, 'cap-height'));
+}
+
+/**
+* Extended Font Data Map
+* --------------------
+* Maps semantic font roles to their corresponding metrics and properties.
+* This map combines the font naming system with their detailed metrics,
+* creating an abstraction layer for consistent typographic application.
+* 
+* The map is organized into two main categories:
+* 1. Hierarchy-based roles (primary, secondary, tertiary)
+* 2. Function-based roles (display, serif, sans, mono, quote)
+* 
+* Properties for each font:
+* - font-family:   The actual CSS font-family declaration
+* - font-name:     Reference to the internal font identifier
+* - cap:           Capital letter height ratio (abbreviated from cap-height)
+* - cap-ratio:     ???
+* - d:             Lowercase ascender height ratio (abbreviated from d-height)
+* - ch:            Avarage character width ratio
+* - ascender:      Maximum upward font extension from baseline
+* - descender:     Maximum downward font extension from baseline
+* 
+* Usage Example:
+* $display-cap-height: map.get($font-data, 'display', 'cap');
+* 
+* Note: All values are dynamically mapped from the base $font-data map,
+* ensuring consistency across the type system. Property names are
+* abbreviated for convenience in complex calculations.
+*/
+$font-data: (
+  // Hierarchical
+  'primary': (
+    'font-family'   : get-font-metric($primary-font, 'font-family'),
+    'font-name'     : $primary-font,
+    'cap'           : get-font-metric($primary-font, 'cap-height'),
+    'cap-ratio'     : 1,
+    'd'             : get-font-metric($primary-font, 'd-height'),
+    'lsb'           : get-font-metric($primary-font, 'lsb-avarage'),
+    'ch'            : get-font-metric($primary-font, 'ch-width'),
+    'ascender'      : get-font-metric($primary-font, 'ascender'),
+    'descender'     : get-font-metric($primary-font, 'descender')
+  ),
+
+  'secondary': (
+    'font-family'   : get-font-metric($secondary-font, 'font-family'),
+    'font-name'     : $secondary-font,
+    'cap'           : get-font-metric($secondary-font, 'cap-height'),
+    'cap-ratio'     : get-cap-ratio($secondary-font),
+    'd'             : get-font-metric($secondary-font, 'd-height'),
+    'lsb'           : get-font-metric($secondary-font, 'lsb-avarage'),
+    'ch'            : get-font-metric($secondary-font, 'ch-width'),
+    'ascender'      : get-font-metric($secondary-font, 'ascender'),
+    'descender'     : get-font-metric($secondary-font, 'descender')
+  ),
+
+  'tertiary': (
+    'font-family'   : get-font-metric($tertiary-font, 'font-family'),
+    'font-name'     : $tertiary-font,
+    'cap'           : get-font-metric($tertiary-font, 'cap-height'),
+    'cap-ratio'     : get-cap-ratio($tertiary-font),
+    'd'             : get-font-metric($tertiary-font, 'd-height'),
+    'lsb'           : get-font-metric($tertiary-font, 'lsb-avarage'),
+    'ch'            : get-font-metric($tertiary-font, 'ch-width'),
+    'ascender'      : get-font-metric($tertiary-font, 'ascender'),
+    'descender'     : get-font-metric($tertiary-font, 'descender')
+  ),
+
+  // Functinal
+  'display': (
+    'font-family'   : get-font-metric($display-font, 'font-family'),
+    'font-name'     : $display-font,
+    'cap'           : get-font-metric($display-font, 'cap-height'),
+    'cap-ratio'     : get-cap-ratio($display-font),
+    'd'             : get-font-metric($display-font, 'd-height'),
+    'lsb'           : get-font-metric($display-font, 'lsb-avarage'),
+    'ch'            : get-font-metric($display-font, 'ch-width'),
+    'ascender'      : get-font-metric($display-font, 'ascender'),
+    'descender'     : get-font-metric($display-font, 'descender')
+  ),
+
+  'serif': (
+    'font-family'   : get-font-metric($serif-font, 'font-family'),
+    'font-name'     : $serif-font,
+    'cap'           : get-font-metric($serif-font, 'cap-height'),
+    'cap-ratio'     : get-cap-ratio($serif-font),
+    'd'             : get-font-metric($serif-font, 'd-height'),
+    'lsb'           : get-font-metric($serif-font, 'lsb-avarage'),
+    'ch'            : get-font-metric($serif-font, 'ch-width'),
+    'ascender'      : get-font-metric($serif-font, 'ascender'),
+    'descender'     : get-font-metric($serif-font, 'descender')
+  ),
+
+  'sans': (
+    'font-family'   : get-font-metric($sans-font, 'font-family'),
+    'font-name'     : $sans-font,
+    'cap'           : get-font-metric($sans-font, 'cap-height'),
+    'cap-ratio'     : get-cap-ratio($sans-font),
+    'd'             : get-font-metric($sans-font, 'd-height'),
+    'lsb'           : get-font-metric($sans-font, 'lsb-avarage'),
+    'ch'            : get-font-metric($sans-font, 'ch-width'),
+    'ascender'      : get-font-metric($sans-font, 'ascender'),
+    'descender'     : get-font-metric($sans-font, 'descender')
+  ),
+
+  'quote': (
+    'font-family'   : get-font-metric($quote-font, 'font-family'),
+    'font-name'     : $quote-font,
+    'cap'           : get-font-metric($quote-font, 'cap-height'),
+    'cap-ratio'     : get-cap-ratio($quote-font),
+    'd'             : get-font-metric($quote-font, 'd-height'),
+    'lsb'           : get-font-metric($quote-font, 'lsb-avarage'),
+    'ch'            : get-font-metric($quote-font, 'ch-width'),
+    'ascender'      : get-font-metric($quote-font, 'ascender'),
+    'descender'     : get-font-metric($quote-font, 'descender')
+  ),
+
+  'mono': (
+    'font-family'   : get-font-metric($mono-font, 'font-family'),
+    'font-name'     : $mono-font,
+    'cap'           : get-font-metric($mono-font, 'cap-height'),
+    'cap-ratio'     : get-cap-ratio($mono-font),
+    'd'             : get-font-metric($mono-font, 'd-height'),
+    'lsb'           : get-font-metric($mono-font, 'lsb-avarage'),
+    'ch'            : get-font-metric($mono-font, 'ch-width'),
+    'ascender'      : get-font-metric($mono-font, 'ascender'),
+    'descender'     : get-font-metric($mono-font, 'descender')
+  )
+);
+
+// Help Function
+@function get-font-data($font-name, $property) {
+  @return map-get(map-get($font-data, $font-name), $property);
+}
+
+/**
+ * Font Family Variables
+ * -------------------
+ * Global variables that extract and quote the font-family values
+ * from the font data system for direct use in CSS declarations.
+ * 
+ * These variables provide a simplified interface to the font system,
+ * abstracting away the complexity of the underlying data maps.
+ * The quote() function ensures proper CSS string formatting.
+ * 
+ * Hierarchical Fonts:
+ * - $primary-font-family:   Main typeface for headings
+ * - $secondary-font-family: Supporting typeface for subheadings
+ * - $tertiary-font-family:  Body text typeface
+ * 
+ * Functional Fonts:
+ * - $display-font-family:   Large-scale display text
+ * - $serif-font-family:     Traditional serif text
+ * - $sans-font-family:      Clean sans-serif text
+ * - $mono-font-family:      Monospace for code
+ * - $quote-font-family:     Stylized quote text
+ * 
+ * Usage:
+ * .element {
+ *   font-family: $primary-font-family;
+ * }
+*/
+$primary-font-family: get-font-data('primary', 'font-family');
+$secondary-font-family: get-font-data('secondary', 'font-family');
+$tertiary-font-family: get-font-data('tertiary', 'font-family');
+
+$display-font-family: get-font-data('display', 'font-family');
+$serif-font-family: get-font-data('serif', 'font-family');
+$sans-font-family: get-font-data('sans', 'font-family');
+$quote-font-family: get-font-data('quote', 'font-family');
+$mono-font-family: get-font-data('mono', 'font-family');
+
+// Cap Ratio Attrubutes
+$cr-primary: get-font-data('primary', 'cap-ratio');
+$cr-secondary: get-font-data('secondary', 'cap-ratio');
+$cr-tertiary: get-font-data('tertiary', 'cap-ratio');
+
+$cr-display: get-font-data('display', 'cap-ratio');
+$cr-serif: get-font-data('serif', 'cap-ratio');
+$cr-sans: get-font-data('sans', 'cap-ratio');
+$cr-quote: get-font-data('quote', 'cap-ratio');
+$cr-mono: get-font-data('mono', 'cap-ratio');
