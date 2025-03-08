@@ -1,12 +1,15 @@
 //*** Abstracts Function: Has Substring ***//
 
 @use '../variables' as var;
-
+@use 'sass:string';
 
 /// Checks if a string contains a specific substring
 /// @param {String} $string - The string to search within
 /// @param {String} $substring - The substring to search for
 /// @return {Boolean} True if substring is found, false otherwise
+/// @example
+///   $result: has-substring('mobile-up', 'up');    // Returns true
+///   $result: has-substring('tablet-only', 'down'); // Returns false
 @function has-substring($string, $substring) {
-  @return str-index($string, $substring) != null;
+  @return string.index($string, $substring) != null;
 }
