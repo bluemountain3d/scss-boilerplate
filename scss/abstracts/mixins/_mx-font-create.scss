@@ -1,0 +1,157 @@
+//*** Abstracts Mixin: Font Create ***//
+
+@use '../variables' as var;
+@use '../functions' as fn;
+
+@use 'sass:map';
+
+
+
+/**
+* Font Setup Mixin
+* --------------
+* A simplified mixin for setting up font styles using the font system.
+* This mixin extends predefined font classes and sets CSS custom properties
+* for font characteristics. It provides a clean interface for applying
+* consistent typography across components.
+* 
+* Parameters:
+* @param {String} $font           - Font role from the system ('primary', 'sans', etc.)
+* @param {Length} $font-size      - Font size value (default: 1em)
+* @param {Length} $line-height    - Line height value (default: 1em)
+* @param {Number} $font-weight    - Font weight value (default: 400)
+* @param {String} $font-style     - Font style value (default: normal)
+* @param {String} $letter-spacing - Letter spacing value (default: normal)
+* @param {String} $text-transform - Text transform value (default: none)
+* 
+* Features:
+* - Sets CSS custom properties for runtime flexibility
+* - Extends base font classes (.$font-text)
+* - Extends common text properties (.text-properties)
+* - Accepts @content for additional style declarations
+* 
+* Usage:
+* .element {
+*   @include f-setup-x('primary', 2em, 1.5em);
+* }
+* 
+* Note: Requires predefined classes:
+* - .[font]-text classes for font-family definitions
+* - .text-properties for common text rendering properties
+*/
+@mixin f-setup (
+  $font: 'primary',
+  $font-size: 1em,
+  $line-height: 1em,
+  $font-weight: 400,
+  $font-style: normal,
+  $letter-spacing: normal,
+  $text-transform: none,
+) {
+  
+  // CSS
+  --font-size: #{$font-size};
+  --line-height: #{fn.addUnit($line-height, "em")};
+  --font-weight: #{$font-weight};
+  --font-style: #{$font-style};
+  --letter-spacing: #{$letter-spacing};
+  --text-transform: #{$text-transform};
+
+  @extend .#{$font}-text; // Applies font-family and trimming
+  @extend .text-properties; // Applies custom properties
+  @content;
+}
+
+
+/**
+* Font Style Creation Mixin
+* -----------------------
+* Creates a complete typographic style block with precise metrics adjustments
+* to ensure perfect vertical rhythm and alignment. This mixin handles both
+* the technical setup of font properties and the complex calculations needed
+* for precise vertical spacing.
+* 
+* Parameters:
+* @param {String} $font           - Font role from font-data map ('primary', 'sans', etc.)
+* @param {String} $text-height    - Reference height for calculations ('cap' or 'd')
+* @param {Length} $font-size      - Font size value (default: 1em)
+* @param {Number} $line-height    - Line height multiplier (default: 1)
+* @param {Number} $font-weight    - Font weight value (default: 400)
+* @param {String} $font-style     - Font style value (default: normal)
+* @param {String} $letter-spacing - Letter spacing value (default: normal)
+* @param {String} $text-transform - Text transform value (default: none)
+* 
+* Technical Details:
+* - Uses CSS custom properties for runtime flexibility
+* - Calculates precise margin adjustments using font metrics
+* - Employs pseudo-elements to remove extra space above/below text
+* - Handles both cap-height and x-height based alignment
+* 
+* Calculations:
+* - $lhx: Half of extra line-height space for centering
+* - $mtx: Compensation for space above reference height (cap or d)
+* - $mbx: Compensation for descender space
+* 
+* Usage:
+* .element {
+*   @include f-create-x('primary', 'cap', 2em, 1.5);
+* }
+* 
+* Note: The mixin accepts @content for additional style declarations
+* and automatically handles the creation of trimming pseudo-elements.
+*/
+@mixin f-create (
+  $font: 'primary',
+  $text-height: 'cap',
+  $font-size: 1em,
+  $line-height: 1,
+  $font-weight: 400,
+  $font-style: normal,
+  $letter-spacing: normal,
+  $text-transform: none,
+) {
+  // SCSS variables
+  $data: map.get(var.$font-data, $font);
+  $font-family: map.get($data, 'font-family');
+  $th: map.get($data, $text-height);
+  $asc: map.get($data, 'ascender');
+  $dec: map.get($data, 'descender');
+  $lhx: (fn.strip-unit($line-height) - 1) / -2 * 1em; //'((var(--line-height) - 1em) / -2)';
+  $mtx: '(-1em * #{$asc - $th})';
+  $mbx: '(-1em * #{$dec})';
+  
+  // CSS
+  & {
+    --font-size: #{$font-size};
+    --line-height: #{fn.addUnit($line-height, "em")};
+    --font-weight: #{$font-weight};
+    --font-style: #{$font-style};
+    --letter-spacing: #{$letter-spacing};
+    --text-transform: #{$text-transform};
+
+    font-family: #{$font-family};
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    font-weight: var(--font-weight);
+    font-style: var(--font-style);
+    letter-spacing: var(--letter-spacing);
+    text-transform: var(--text-transform); 
+  }
+
+  @content;
+
+  // ::before: Removes space above "H" or "d" on the first line.
+  // ::after: Removes space beneath baseline on the last line
+  &::before, &::after {
+    content: "";
+    display: table;
+  }
+
+  &::before {
+    margin-top: calc(#{$lhx} + #{$mtx});
+  }
+
+  &::after {
+    margin-bottom: calc(#{$lhx} + #{$mbx});
+  }
+}
