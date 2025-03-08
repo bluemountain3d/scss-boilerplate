@@ -3,6 +3,10 @@
 @use '../variables' as var;
 @use '../functions' as fn;
 
+@use 'sass:string';
+@use 'sass:map';
+@use 'sass:list';
+
 
 //* Media Queries: Table of content
 // 1. Map with possible orientations
@@ -13,7 +17,7 @@
 // 6. Helper function that gets the breakpoint part of the string
 // 7. Responsive media queries with support for breakpoints and orientation
 // 8. Mixin for Ultra Wide Viewports 
-
+// Requires $breakpoints map in '../variables', e.g., ('mobile': 320px, 'tablet': 768px)
 
 //* 1.
 // Device orientation types
@@ -23,41 +27,43 @@ $orientations: ('portrait', 'landscape');
 // Valid breakpoint suffixes as a list
 $valid-suffixes: ('-up', '-down', '-only', '');
 
-//* 3.
-/// Validates if a breakpoint string contains a valid suffix
-/// The function checks if the part after the first hyphen (if any) matches
-/// one of the predefined valid suffixes: '-up', '-down', '-only', or '' (no suffix).
-/// For example, in 'mobile-up', it checks if '-up' is a valid suffix.
-/// 
-/// @param {String} $breakpoint - The full breakpoint string to validate (e.g., 'mobile-up', 'tablet-down')
-/// @return {Boolean} Returns true if the suffix is valid or if there is no suffix,
-///                   Returns false if the suffix exists but isn't in the valid list
-///
-/// @example scss
-///   $result: is-valid-suffix('mobile-up');     // Returns true
-///   $result: is-valid-suffix('tablet-down');   // Returns true
-///   $result: is-valid-suffix('mobile');        // Returns true (no suffix)
-///   $result: is-valid-suffix('laptop-weird');  // Returns false
-///
+/** 3.
+ * Validates if a breakpoint string contains a valid suffix
+ * The function checks if the part after the first hyphen (if any) matches
+ * one of the predefined valid suffixes: '-up', '-down', '-only', or '' (no suffix).
+ * For example, in 'mobile-up', it checks if '-up' is a valid suffix.
+ * 
+ * @param {String} $breakpoint - The full breakpoint string to validate (e.g., 'mobile-up', 'tablet-down')
+ * @return {Boolean} Returns true if the suffix is valid or if there is no suffix,
+ *                   Returns false if the suffix exists but isn't in the valid list
+ *
+ * @example scss
+ *   $result: is-valid-suffix('mobile-up');     // Returns true
+ *   $result: is-valid-suffix('tablet-down');   // Returns true
+ *   $result: is-valid-suffix('mobile');        // Returns true (no suffix)
+ *   $result: is-valid-suffix('laptop-weird');  // Returns false
+*/
 @function is-valid-suffix($breakpoint) {
   // Extract everything after the first `-`
-  $separator-index: str-index($breakpoint, '-');
+  $separator-index: string.index($breakpoint, '-');
   
   @if $separator-index {
-    $suffix: str-slice($breakpoint, $separator-index);
-    @return index($valid-suffixes, $suffix) != null;
+    @return string.slice($breakpoint, 1, $separator-index - 1);
+  } @else {
+    @return $breakpoint;
   }
   
   // No suffix is also valid
   @return true;
 }
 
-//* 4.
-/// Returns the next breakpoint key from the $breakpoints map
-/// @param {String} $current-key - The current breakpoint key to find the next key for
-/// @return {String|Null} The next breakpoint key, or null if no next key exists
+/** 4.
+ * Returns the next breakpoint key from the $breakpoints map
+ * @param {String} $current-key - The current breakpoint key to find the next key for
+ * @return {String|Null} The next breakpoint key, or null if no next key exists
+*/
 @function get-max-width-key($current-key) {
-  $keys: map-keys($breakpoints); // Extract all keys from the breakpoints map
+  $keys: map.keys($breakpoints); // Extract all keys from the breakpoints map
   $found: false; // Flag to track when we find the current key
   
   @each $key in $keys {
@@ -75,159 +81,125 @@ $valid-suffixes: ('-up', '-down', '-only', '');
   @return null;
 }
 
-//* 5.
-/// Checks if a string contains a specific substring
-/// @param {String} $string - The string to search within
-/// @param {String} $substring - The substring to search for
-/// @return {Boolean} True if substring is found, false otherwise
+/** 5.
+ * Checks if a string contains a specific substring
+ * @param {String} $string - The string to search within
+ * @param {String} $substring - The substring to search for
+ * @return {Boolean} True if substring is found, false otherwise
+*/
 @function has-substring($string, $substring) {
-  @return str-index($string, $substring) != null;
+  @return string.index($string, $substring) != null;
 }
 
-//* 6.
-/// Extracts the breakpoint key from a string (e.g., 'mobile-up' becomes 'mobile')
-/// @param {String} $breakpoint - The breakpoint string to parse
-/// @return {String} The extracted breakpoint key
+/** 6.
+ * Extracts the breakpoint key from a string (e.g., 'mobile-up' becomes 'mobile')
+ * @param {String} $breakpoint - The breakpoint string to parse
+ * @return {String} The extracted breakpoint key
+*/
 @function extract-breakpoint-key($breakpoint) {
   // Find position of the first `-` in the string
-  $separator-index: str-index($breakpoint, '-');
+  $separator-index: list.index($breakpoint, '-');
   
   @if $separator-index {
     // Extract everything before the `-`
-    @return str-slice($breakpoint, 1, $separator-index - 1);
+    @return string.slice($breakpoint, 1, $separator-index - 1);
   } @else {
     // No `-` in the string, return the whole string
     @return $breakpoint;
   }
 }
 
-//* 7.
-/// Creates responsive media queries with support for breakpoints and orientation
-/// @param {String} $breakpoint ['mobile-only'] - The breakpoint to target. 
-///   Supports suffixes:
-///   - '-only' (e.g., 'mobile-only'): Targets only this breakpoint range
-///   - '-up' (e.g., 'tablet-up'): Targets this breakpoint and larger
-///   - '-down' (e.g., 'desktop-down'): Targets this breakpoint and smaller
-///   If no suffix is provided, behaves like '-up'
-/// @param {String} $orientation [null] - Optional orientation to target ('portrait' or 'landscape')
-/// @content - The content to be included within the media query
-/// 
-/// @example
-///   @include for-breakpoint('tablet-up') {
-///     .header { padding: 2rem; }
-///   }
-/// 
+/** 7.
+ * Creates responsive media queries with support for breakpoints and orientation
+ * @param {String} $breakpoint ['mobile-only'] - The breakpoint to target. 
+ *   Supports suffixes:
+ *   - '-only' (e.g., 'mobile-only'): Targets only this breakpoint range
+ *   - '-up' (e.g., 'tablet-up'): Targets this breakpoint and larger
+ *   - '-down' (e.g., 'desktop-down'): Targets this breakpoint and smaller
+ *   If no suffix is provided, behaves like '-up'
+ * @param {String} $orientation [null] - Optional orientation to target ('portrait' or 'landscape')
+ * @content - The content to be included within the media query
+ * 
+ * @example
+ *   @include for-breakpoint('tablet-up') {
+ *     .header { padding: 2rem; }
+ *   }
+*/ 
 @mixin for-breakpoint($breakpoint: 'mobile', $orientation: null) {
-  // Validate the breakpoint name
   $min-width-key: extract-breakpoint-key($breakpoint);
-  
-  // Check if the breakpoint exists
+
   @if not map-has-key($breakpoints, $min-width-key) {
     @error "Unknown breakpoint: '#{$min-width-key}'. Valid breakpoints are: #{map-keys($breakpoints)}";
   }
-  
-  // Check if the suffix is valid
   @if not is-valid-suffix($breakpoint) {
     @error "Invalid breakpoint suffix in '#{$breakpoint}'. Valid suffixes are: #{$valid-suffixes}";
   }
-  
-  // Validate orientation if provided
-  @if $orientation {
-    @if not index($orientations, $orientation) {
-      @error "Invalid orientation: '#{$orientation}'. Must be one of: #{$orientations}";
-    }
+  @if $orientation and not list.index(var.$orientations, $orientation) {
+    @error "Invalid orientation: '#{$orientation}'. Must be one of: #{var.$orientations}";
   }
 
   $max-width-key: get-max-width-key($min-width-key);
-  $min-width: map-get($breakpoints, $min-width-key);
-  $max-width: map-get($breakpoints, $max-width-key);
+  $min-width: map.get($breakpoints, $min-width-key);
+  $max-width: map.get($breakpoints, $max-width-key);
 
+  $query: 'screen';
   @if $orientation {
-    @if not index(var.$orientations, $orientation) {
-      @error 'Invalid orientation: #{$orientation}. Must be one of: #{var.$orientations}';
-    }
+    $query: '#{$query} and (orientation: #{$orientation})';
+  }
 
-    @if has-substring($breakpoint, 'only') {
-      @media screen and (min-width: $min-width) 
-                    and (max-width: $max-width)
-                    and (orientation: $orientation ) {
-        @content;
-      }
+  @if has-substring($breakpoint, 'only') {
+    @media #{$query} and (min-width: $min-width) and (max-width: $max-width) {
+      @content;
     }
-
-    @else if has-substring($breakpoint, 'up') {
-      @media screen and (min-width: $min-width)
-                    and (orientation: $orientation ) {
-        @content;
-      }
+  } @else if has-substring($breakpoint, 'up') or not has-substring($breakpoint, '-') {
+    @media #{$query} and (min-width: $min-width) {
+      @content;
     }
-
-    @else if has-substring($breakpoint, 'down') {
-      @media screen and (max-width: $max-width)
-                    and (orientation: $orientation ) {
-        @content;
-      }
-    }
-  
-    @else {
-      @media screen and (min-width: $min-width)
-                    and (orientation: $orientation ) {
-        @content;
-      }
-    }
-  } 
-  
-  @else {
-    @if has-substring($breakpoint, 'only') {
-      @media screen and (min-width: $min-width) 
-                    and (max-width: $max-width) {
-        @content;
-      }
-    }
-
-    @else if has-substring($breakpoint, 'up') {
-      @media screen and (min-width: $min-width) {
-        @content;
-      }
-    }
-
-    @else if has-substring($breakpoint, 'down') {
-      @media screen and (max-width: $max-width) {
-        @content;
-      }
-    }
-  
-    @else {
-      @media screen and (min-width: $min-width) {
-        @content;
-      }
+  } @else if has-substring($breakpoint, 'down') {
+    @media #{$query} and (max-width: $max-width) {
+      @content;
     }
   }
 }
 
-//* 8.
-/// Mixin for Ultra Wide Viewports
-/// @param {string} $ratio - The minimum aspect ratio of the viewport (width/height) (2/1)
-/// @param {number} $min-height - The minimum viewport height in rems (67.5rem)
-/// 
-/// @example scss
-///   @include mq-ultra-wide {
-///     .container {
-///       width: 70vw;
-///     }
-///   }
-/// 
-/// @example scss - Custom parameters
-///   @include mq-ultra-wide('21/9', 60rem) {
-///     .container {
-///       width: 60vw;
-///     }
-///   }
-/// 
-@mixin for-ultra-wide($ratio: '2/1', $min-height: 67.5rem) {
-  @media screen 
-    and (min-height: $min-height)     // Default viewport height 1080px
-    and (min-aspect-ratio: $ratio) {  // Default miewport ratio 2:1
+/** 8.
+ * Mixin for Ultra Wide Viewports
+ * @param {string} $ratio - The minimum aspect ratio of the viewport (width/height) (2/1)
+ * @param {number} $min-height - The minimum viewport height in rems (67.5rem)
+ * @param {breakpoint} 'null' - Possibility to set a valid breakpoint
+ * 
+ * @example scss
+ *   @include mq-ultra-wide {
+ *     .container {
+ *       width: 70vw;
+ *     }
+ *   }
+ * 
+ * @example scss - Custom parameters
+ *   @include mq-ultra-wide('21/9', 60rem) {
+ *     .container {
+ *       width: 60vw;
+ *     }
+ *   }
+*/ 
+// @mixin for-ultra-wide($ratio: '2/1', $min-height: 67.5rem) {
+//   @media screen 
+//     and (min-height: $min-height)     // Default viewport height 1080px
+//     and (min-aspect-ratio: $ratio) {  // Default miewport ratio 2:1
+//     @content;
+//   }
+// }
+@mixin for-ultra-wide($ratio: '2/1', $min-height: 67.5rem, $breakpoint: null) {
+  $query: 'screen and (min-height: #{$min-height}) and (min-aspect-ratio: #{$ratio})';
+  @if $breakpoint {
+    $min-width-key: extract-breakpoint-key($breakpoint);
+    @if not map-has-key($breakpoints, $min-width-key) {
+      @error "Unknown breakpoint: '#{$min-width-key}'...";
+    }
+    $min-width: map.get($breakpoints, $min-width-key);
+    $query: '#{$query} and (min-width: #{$min-width})';
+  }
+  @media #{$query} {
     @content;
   }
 }
