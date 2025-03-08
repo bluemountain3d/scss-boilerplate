@@ -5,13 +5,10 @@
 @use '../abstracts/mixins' as mx;
 
 @use 'sass:math';
+@use 'sass:map';
 
 
-$_module-name: 'Typography';
-
-/* ### #{$_module-name} START */
-
-
+// Typography global custom properties
 :root {
   @include mx.fluid-font-size-var(
     $prefix: 'fs', 
@@ -34,11 +31,123 @@ $_module-name: 'Typography';
     --leading-#{$value}: #{math.div($value, 100)}em;
     $value: $value + 5;
   }
+
+  // Establish a fluid rhythm unit based on our base font size
+  --fluid-rhythm: calc(var(--fs-300) * var(--line-height));
+
+  // Font Families
+  --primary-ff: #{var.$primary-font-family}, serif;
+  --secondary-ff: #{var.$secondary-font-family}, sans-serif;
+  --tertiary-ff: #{var.$tertiary-font-family}, serif;
+  --quote-ff: #{var.$quote-font-family}, serif;
+  --mono-ff: #{var.$mono-font-family}, monospace;
+
+  --heading-ff: var(--primary-ff);
+  --subheading-ff: var(--secondary-ff);
+  --body-text-ff: var(--tertiary-ff);
+  --detail-ff: var(--secondary-ff);
+
+  // Font Familes Bold Weight
+  --primary-bold: 700;
+  --secondary-bold: 700;
+  --tertiary-bold: 600;
+  --quote-bold: 700;
+  --mono-bold: 700;
+
+  --heading-bold: var(--primary-bold);
+  --subheading-bold: var(--secondary-bold);
+  --body-text-bold: var(--tertiary-bold);
+  --detail-bold: var(--secondary-bold);
 }
 
 
-/* ### #{$_module-name} END
-/* ------------------------------------------------------------ */
+//* Font Properties
+.text-properties {
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  font-weight: var(--font-weight);
+  font-style: var(--font-style);
+  letter-spacing: var(--letter-spacing);
+  text-transform: var(--text-transform);
+}
+
+// Mixin for cap-to-baseline trimming
+@mixin trim-cap-to-baseline($font: 'primary', $text-height: 'cap', $block: true) {
+  @if $block {
+    display: block; // Ensures trimming works
+  }
+  @if not index(('cap', 'd'), $text-height) {
+    @error "Invalid $text-height '#{$text-height}'. Must be 'cap' or 'd'.";
+  }
+  // Set font-specific metrics as custom properties
+  --th: #{map.get(map.get(var.$font-data, $font), $text-height)};
+  --asc: #{map.get(map.get(var.$font-data, $font), 'ascender')};
+  --dec: #{map.get(map.get(var.$font-data, $font), 'descender')};
+  $lsb-value: map.get(map.get(var.$font-data, $font), 'lsb');
+  @if $lsb-value != null and $lsb-value != 0 {
+    --lsb: -#{$lsb-value}em;
+  } @else {
+    --lsb: 0;
+  }
+  // Left Side Bearing compensation
+  margin-inline-start: var(--lsb);
+  // Common ::before and ::after elements properties
+  &::before, &::after {
+    content: "";
+    display: table;
+  }
+  // The negative margin top removes the space above the capital characters so that the top of the capital character aliigning with the top of the text element 
+  &::before {
+    /// line-height - 1em, example: (1.5em - 1em) / -2 = 0.5em / -2 = -0.25. the empty space of the line-height as a negative value for removing space.
+    /// line-height - 1em / -2
+    /// -1em * (ascender - cap-height): -1em * (0.75 - 0.65) = 
+    margin-top: calc(((var(--line-height) - 1em) / -2) + (-1em * (var(--asc) - var(--th))));
+  }
+  // The negative margin bottom removes the space beneath the baseline so that the baseline aligns with the bottom of the text element
+  &::after {
+    margin-bottom: calc(((var(--line-height) - 1em) / -2) + (-1em * var(--dec)));
+  }
+
+  // Modern approach for supporting browsers
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+    text-box-trim: trim-both;
+    @if $text-height == 'cap' {
+      text-box-edge: cap alphabetic; // Top: cap height, Bottom: baseline
+    } @else if $text-height == 'd' {
+      text-box-edge: leading alphabetic; // Top: ascender height, Bottom: baseline
+    }
+    &::before, &::after {
+      display: none; // Remove pseudo-elements when modern properties are supported
+    }
+  }
+}
+
+//*** Line-height to leading system START
+// Font metric classes with trimming
+.primary-text {
+  font-family: var(--primary-ff);
+  @include trim-cap-to-baseline('primary');
+}
+
+.secondary-text {
+  font-family: var(--secondary-ff);
+  @include trim-cap-to-baseline('secondary');
+}
+
+.tertiary-text {
+  font-family: var(--tertiary-ff);
+  @include trim-cap-to-baseline('tertiary');
+}
+
+.quote-text {
+  font-family: var(--quote-ff);
+  @include trim-cap-to-baseline('quote');
+}
+
+.mono-text {
+  font-family: var(--mono-ff);
+  @include trim-cap-to-baseline('mono');
+}
+//*** Line-height to leading system END
 
 
-// _mx-media-queries.scss
