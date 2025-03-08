@@ -175,7 +175,7 @@
     
     // Output CSS
     .#{$prefix}-#{$sizeName} {
-      font-size: #{$size};
+      font-size: #{$size} !important;
     }
   }
 }
@@ -272,7 +272,7 @@
       --#{$prefix}-#{$sizeName}: #{$size};
     } @else if index(('util', 'uc', 'utility-class', 'class', 'utils', 'classes'), $type) {
       .#{$prefix}-#{$sizeName} {
-        font-size: #{$size};
+        font-size: #{$size} !important;
       }
     }
   }
