@@ -2,6 +2,9 @@
 
 @use '../variables' as var;
 
+@use 'sass:list';
+@use 'sass:map';
+
 
 /**
  * Utility function to filter weights based on inclusion list.
@@ -14,8 +17,8 @@
 @function map-filter($map, $include-list) {
   $filtered: ();
   @each $key, $value in $map {
-    @if index($include-list, $key) {
-      $filtered: map-merge($filtered, ($key: $value));
+    @if list.index($include-list, $key) {
+      $filtered: map.merge($filtered, ($key: $value));
     }
   }
   @return $filtered;
