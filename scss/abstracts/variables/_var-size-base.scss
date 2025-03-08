@@ -3,11 +3,11 @@
 
 // Size Base
 $size-base: (
-  "min-size": 16,
-  "max-size": 20,
-  "min-width": 384,
-  "max-width": 1920,
-  "min-scale": 1.25,
-  "max-scale": 1.333,
-  "decimals": 4
+  "min-size": 16,      // 16px minimum font size
+  "max-size": 20,      // 20px maximum font size
+  "min-width": 384,    // Smallest viewport (e.g., mobile)
+  "max-width": 1920,   // Largest viewport (e.g., desktop)
+  "min-scale": 1.25,   // Minor third scale for small screens
+  "max-scale": 1.333,  // Major third scale for large screens
+  "decimals": 6        // Precision for fluid calculations
 );
