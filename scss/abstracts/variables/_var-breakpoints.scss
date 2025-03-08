@@ -1,12 +1,19 @@
-//*** Abstracts Variables: Name ***//
+//*** Abstracts Variables: Breakpoints ***//
 
+// Breakpoints use px for fixed layout control; typography uses rem/em to respect user font size (root set to 100%).
 $max-content-width: 120rem;  // 1920 ÷ 16px
 
-// Breakpoint definitions
+// Breakpoint definitions with t-shirt sizes and device names
+// T-shirt sizes (xs, sm, md, lg, xl) and device names (mobile, tablet, etc.) are aliases for the same values.
 $breakpoints: (
-  'mobile':  320px,
-  'phablet': 540px,
-  'tablet':  720px,
-  'laptop':  1350px,
-  'desktop': 1800px
+  'xs': 320px,      // Extra small
+  'mobile': 320px,  // Semantic alias for xs
+  'sm': 540px,      // Small
+  'phablet': 540px, // Semantic alias for sm
+  'md': 720px,      // Medium
+  'tablet': 720px,  // Semantic alias for md
+  'lg': 1350px,     // Large
+  'laptop': 1350px, // Semantic alias for lg
+  'xl': 1800px,     // Extra large
+  'desktop': 1800px // Semantic alias for xl
 );
