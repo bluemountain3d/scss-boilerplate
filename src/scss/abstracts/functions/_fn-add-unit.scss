@@ -5,7 +5,7 @@
 @use 'sass:math';
 
 @function addUnit($value, $unit) {
-  @if math.unitless($value) {
+  @if math.is-unitless($value) {
     $value: #{$value}#{$unit};
   }
   @return $value;

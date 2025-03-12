@@ -1,0 +1,8 @@
+//*** Abstracts Function: Name ***//
+
+@use '../variables' as var;
+
+/** */
+@function fluid-baseline($lines: 1) {
+  @return calc(var(--fluid-rhythm) * #{$lines});
+}

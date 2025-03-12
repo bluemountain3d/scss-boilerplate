@@ -2,11 +2,6 @@
 
 @use '../abstracts/variables' as var;
 
-// Set name
-$_module-name: "CSS Reset";
-
-/* ### #{$_module-name} START */
-
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -39,6 +34,3 @@ img, picture, svg, video, canvas {
   max-width: 100%;
   height: auto;
 }
-
-/* ### #{$_module-name} END
-/* ------------------------------------------------------------ */

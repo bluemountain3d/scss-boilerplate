@@ -1,0 +1,411 @@
+//*** Theme Typography ***//
+
+@use '../abstracts/variables' as var;
+@use '../abstracts/functions' as fn;
+@use '../abstracts/mixins' as mx;
+
+@use 'sass:math';
+@use 'sass:map';
+
+
+// Typography global custom properties
+:root {
+  @include mx.fluid-font-size(
+    $prefix: 'fs', 
+    $vwx: true, 
+    $method: 'clamp'
+  );
+
+  @include mx.fluid-font-size(
+    $prefix: 'text', 
+    $minScale: 1.125,
+    $maxScale: 1.125,
+    $vwx: true, 
+    $method: 'clamp',
+    $include-sizes: (100, 200, 300, 400, 500)
+  );
+
+  // Leading
+  $value: 100;
+  @while $value <= 200 {
+    --leading-#{$value}: #{math.div($value, 100)}em;
+    $value: $value + 5;
+  }
+
+  // Establish a fluid rhythm unit based on our base font size
+  // --fluid-rhythm: calc(var(--fs-300) * var(--line-height));
+
+  // Font Families
+  --primary-ff: #{var.$primary-font-family}, serif;
+  --secondary-ff: #{var.$secondary-font-family}, serif;
+  --tertiary-ff: #{var.$tertiary-font-family}, sans-serif;
+  --quote-ff: #{var.$quote-font-family}, serif;
+  --mono-ff: #{var.$mono-font-family}, monospace;
+
+  --heading-ff: var(--primary-ff);
+  --subheading-ff: var(--secondary-ff);
+  --body-text-ff: var(--tertiary-ff);
+  --detail-ff: var(--secondary-ff);
+
+  // Font Descender
+  --primary-des: #{map.get(map.get(var.$font-data, 'primary'), 'descender')}em;
+  --secondary-des: #{map.get(map.get(var.$font-data, 'secondary'), 'descender')}em;
+  --tertiary-des: #{map.get(map.get(var.$font-data, 'tertiary'), 'descender')}em;
+  --quote-des: #{map.get(map.get(var.$font-data, 'quote'), 'descender')}em;
+  --mono-des: #{map.get(map.get(var.$font-data, 'mono'), 'descender')}em;
+
+  // Font Familes Bold Weight
+  --primary-bold: 700;
+  --secondary-bold: 700;
+  --tertiary-bold: 600;
+  --quote-bold: 700;
+  --mono-bold: 700;
+
+  --heading-bold: var(--primary-bold);
+  --subheading-bold: var(--secondary-bold);
+  --body-text-bold: var(--tertiary-bold);
+  --detail-bold: var(--secondary-bold);
+}
+
+
+//* Font Properties
+.text-properties {
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  font-weight: var(--font-weight);
+  font-style: var(--font-style);
+  letter-spacing: var(--letter-spacing);
+  text-transform: var(--text-transform);
+}
+
+// Mixin for cap-to-baseline trimming
+@mixin trim-cap-to-baseline($font: 'primary', $text-height: 'cap', $block: true) {
+  @if $block {
+    display: block; // Ensures trimming works
+  }
+  @if not index(('cap', 'd'), $text-height) {
+    @error "Invalid $text-height '#{$text-height}'. Must be 'cap' or 'd'.";
+  }
+  // Set font-specific metrics as custom properties
+  --th: #{map.get(map.get(var.$font-data, $font), $text-height)};
+  --asc: #{map.get(map.get(var.$font-data, $font), 'ascender')};
+  --dec: #{map.get(map.get(var.$font-data, $font), 'descender')};
+  $lsb-value: map.get(map.get(var.$font-data, $font), 'lsb');
+  @if $lsb-value != null and $lsb-value != 0 {
+    --lsb: -#{$lsb-value}em;
+  } @else {
+    --lsb: 0;
+  }
+  // Left Side Bearing compensation
+  margin-inline-start: var(--lsb);
+  // Common ::before and ::after elements properties
+  &::before, &::after {
+    content: "";
+    display: table;
+  }
+  // The negative margin top removes the space above the capital characters so that the top of the capital character aliigning with the top of the text element 
+  &::before {
+    /// line-height - 1em, example: (1.5em - 1em) / -2 = 0.5em / -2 = -0.25. the empty space of the line-height as a negative value for removing space.
+    /// line-height - 1em / -2
+    /// -1em * (ascender - cap-height): -1em * (0.75 - 0.65) = 
+    margin-top: calc(((var(--line-height) - 1em) / -2) + (-1em * (var(--asc) - var(--th))));
+  }
+  // The negative margin bottom removes the space beneath the baseline so that the baseline aligns with the bottom of the text element
+  &::after {
+    margin-bottom: calc(((var(--line-height) - 1em) / -2) + (-1em * var(--dec)));
+  }
+
+  // Modern approach for supporting browsers
+  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
+    text-box-trim: trim-both;
+    @if $text-height == 'cap' {
+      text-box-edge: cap alphabetic; // Top: cap height, Bottom: baseline
+    } @else if $text-height == 'd' {
+      text-box-edge: leading alphabetic; // Top: ascender height, Bottom: baseline
+    }
+    &::before, &::after {
+      display: none; // Remove pseudo-elements when modern properties are supported
+    }
+  }
+}
+
+//*** Line-height to leading system START
+// Font metric classes with trimming
+.primary-text {
+  font-family: var(--primary-ff);
+  @include trim-cap-to-baseline('primary');
+}
+
+.secondary-text {
+  font-family: var(--secondary-ff);
+  @include trim-cap-to-baseline('secondary');
+}
+
+.tertiary-text {
+  font-family: var(--tertiary-ff);
+  @include trim-cap-to-baseline('tertiary');
+}
+
+.quote-text {
+  font-family: var(--quote-ff);
+  @include trim-cap-to-baseline('quote');
+}
+
+.mono-text {
+  font-family: var(--mono-ff);
+  @include trim-cap-to-baseline('mono');
+}
+//*** Line-height to leading system END
+
+
+// Font Sizes Utility classes
+.fs-100 {font-size: var(--fs-100) !important;}
+.fs-200 {font-size: var(--fs-200) !important;}
+.fs-300 {font-size: var(--fs-300) !important;}
+.fs-400 {font-size: var(--fs-400) !important;}
+.fs-500 {font-size: var(--fs-500) !important;}
+.fs-600 {font-size: var(--fs-600) !important;}
+.fs-700 {font-size: var(--fs-700) !important;}
+.fs-800 {font-size: var(--fs-800) !important;}
+.fs-900 {font-size: var(--fs-900) !important;}
+
+// Margins
+[class^="heading-"] + [class^="heading-"] {
+  margin-block-start: 1.5em;
+}
+
+p[class^="heading-"] + p[class^="heading-"] {
+  margin-block-start: 1.5rem;
+}
+
+[class^="heading-"] + [class^="text-"] {
+  margin-block-start: calc(var(--primary-des) * 1.5);
+}
+
+// Semantic Font Sizes
+.display {
+  &-1 {
+    @include mx.f-setup (
+      $font: 'primary',
+      $font-size: var(--fs-900),
+      $line-height: 1.1em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--primary-des) * 1.5);
+  }
+  &-2 {
+    @include mx.f-setup (
+      $font: 'primary',
+      $font-size: var(--fs-800),
+      $line-height: 1.1em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--primary-des) * 1.5);
+  }
+}
+
+.heading {
+  &-1 {
+    @include mx.f-setup (
+      $font: 'primary',
+      $font-size: var(--fs-700),
+      $line-height: 1.1em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--primary-des) * 1.5);
+  }
+  &-2 {
+    @include mx.f-setup (
+      $font: 'primary',
+      $font-size: var(--fs-600),
+      $line-height: 1.15em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--primary-des) * 1.5);
+  }
+  &-3 {
+    @include mx.f-setup (
+      $font: 'primary',
+      $font-size: var(--fs-500),
+      $line-height: 1.2em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--primary-des) * 1.5);
+  }
+  &-4 {
+    @include mx.f-setup (
+      $font: 'primary',
+      $font-size: var(--fs-400),
+      $line-height: 1.25em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--primary-des) * 1.5);
+  }
+
+  &--bold {
+    --font-weight: var(--primary-bold);
+  }
+}
+
+.text {
+  &-large {
+    @include mx.f-setup (
+      $font: 'tertiary',
+      $font-size: var(--text-500),
+      $line-height: 1.4em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--tertiary-des) * 1.5);
+  }
+  &-medium {
+    @include mx.f-setup (
+      $font: 'tertiary',
+      $font-size: var(--text-400),
+      $line-height: 1.45em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--tertiary-des) * 1.5);
+  }
+  &-normal, &-default {
+    @include mx.f-setup (
+      $font: 'tertiary',
+      $font-size: var(--text-300),
+      $line-height: 1.5em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--tertiary-des) * 1.5);
+  }
+  &-small {
+    @include mx.f-setup (
+      $font: 'tertiary',
+      $font-size: var(--text-200),
+      $line-height: 1.55em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--tertiary-des) * 1.5);
+  }
+  &-tiny {
+    @include mx.f-setup (
+      $font: 'tertiary',
+      $font-size: var(--text-100),
+      $line-height: 1.6em,
+      $font-weight: 400,
+      $font-style: normal,
+      $letter-spacing: normal,
+      $text-transform: none,
+    );
+    //margin-block-end: calc(var(--tertiary-des) * 1.5);
+  }
+
+  &--bold {
+    --font-weight: var(--terriary-bold);
+  }
+}
+
+
+.title-box {
+  display: block;
+  width: 100%;
+  margin-inline: 0 auto;
+
+  &--right > * {
+    margin-inline: auto 0;
+  }
+
+  &--center > * {
+    margin-inline: auto;
+  }
+
+  &--large {
+    font-size: var(--fs-700);
+  }
+  &--medium {
+    font-size: var(--fs-600);
+  }
+  &--small {
+    font-size: var(--fs-500);
+  }
+
+  &__title {
+    @include mx.f-setup (
+      $font: 'primary',
+      $font-size: 1em,
+      $line-height: 1.1em
+    );
+    margin-block-end: calc(var(--primary-des) * 1);
+
+    &--bold {
+      --font-weight: var(--primary-bold);
+    }
+  }
+
+  &__subtitle {
+    @include mx.f-setup (
+      $font: 'secondary',
+      $font-size: calc(1em * #{var.$cr-secondary} / var(--phi)),
+      $line-height: 1.2em
+    );
+
+    &--bold {
+      --font-weight: var(--secondary-bold);
+    }
+  }
+
+  & + p, & + .text-box {
+    margin-block-start: 1em;
+  }
+}
+
+.text-box {
+  width: min(100%, 70ch);
+
+  p {
+    margin-block-end: 0;
+  }
+
+  p + p {
+    margin-top: 1.5rem;
+  }
+}
+
+.lead-in {
+  @include mx.f-setup (
+    $font: 'tertiary',
+    $font-size: var(--text-400),
+    $line-height: 1.6em,
+    $font-weight: var(--tertiary-bold),
+    $font-style: normal,
+    $letter-spacing: normal,
+    $text-transform: none,
+  );
+}

@@ -1,0 +1,76 @@
+//*** Theme: Fonts ***//
+/** 
+ * Description of the module's purpose
+ */
+
+
+// Example
+// @font-face {
+//   font-family: 'Font Family Name';
+//   src: local(''),
+//        url('../path-to-font-file/font-name.woff2') format('woff2');
+//   font-weight: 400;
+//   font-style: normal;
+//   font-display: swap;
+//   size-adjust: 100%;
+// }
+
+// Primary
+@font-face {
+  font-family: 'Canto Pen';
+  src: local(''),
+       url('../fonts/canto-pen/cantopen-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%;
+}
+@font-face {
+  font-family: 'Canto Pen';
+  src: local(''),
+       url('../fonts/canto-pen/canto-pen-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%;
+}
+
+// Secondary
+@font-face {
+  font-family: 'Spectral';
+  src: local(''),
+       url('../fonts/spectral/spectral-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%;
+}
+@font-face {
+  font-family: 'Spectral';
+  src: local(''),
+       url('../fonts/spectral/spectral-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%;
+}
+
+// tertiary
+@font-face {
+  font-family: 'Cronos Pro';
+  src: local(''),
+       url('../fonts/cronos-pro/cronos-pro-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%;
+}
+@font-face {
+  font-family: 'Cronos Pro';
+  src: local(''),
+       url('../fonts/cronos-pro/cronos-pro-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%;
+}
