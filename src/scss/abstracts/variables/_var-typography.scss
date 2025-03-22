@@ -26,6 +26,13 @@ $font-sizes: (
  * These are internal reference names that map to actual font-family declarations
  * in the font-face implementations.
  * 
+ * Base Font Path:
+ * - $font-path: Base directory path for all font files, relative to the stylesheet location.
+ *   Since stylesheets are located in the src/css/ directory, this path points to
+ *   the fonts folder at the same level as the css folder.
+ *   Font files are expected to be organized in subdirectories named after each font.
+ *   Example: For Cinzel, files would be in `../fonts/cinzel/cinzel-regular.woff2`
+ * 
  * Hierarchical Categories:
  * - $primary-font:    Used for primary headings and key visual elements
  * - $secondary-font:  Used for subheadings and supporting text
@@ -38,16 +45,60 @@ $font-sizes: (
  * - $mono-font:       Monospace font for code and technical content
  * - $quote-font:      Stylized font for pullquotes and testimonials
  * 
- * Note: These are internal reference names only and should be mapped
- * to actual font-family declarations in the implementation.
+ * File Naming Convention:
+ * Font files should follow the pattern: `[font-name]-[weight-name].woff2`
+ * 
+ * Weight names follow standard conventions:
+ * - For normal style:
+ *   - regular (400)
+ *   - bold (700)
+ *   - thin (100)
+ *   - extralight (200)
+ *   - light (300)
+ *   - medium (500)
+ *   - semibold (600)
+ *   - extrabold (800)
+ *   - black (900)
+ * 
+ * - For italic style:
+ *   - italic (400 italic)
+ *   - bolditalic (700 italic)
+ *   - thinitalic (100 italic)
+ *   - lightitalic (300 italic)
+ *   - etc.
+ * 
+ * Examples:
+ * - cinzel-regular.woff2
+ * - montserrat-bold.woff2
+ * - spectral-italic.woff2
+ * 
+ * Custom weight names can be defined in the $font-family-data map for fonts 
+ * with non-standard weight naming conventions.
+ * 
+ * Note: These are internal reference names that are processed through the
+ * font system to generate complete @font-face declarations with proper
+ * file paths and size-adjust calculations.
  */
-$primary-font: 'canto-pen';
-$secondary-font: 'spectral';
-$tertiary-font: 'cronos-pro';
+$font-path: '../fonts/';
+$font-weights-map: (
+  100: 'thin',       // "thinitalic" if font-style is "italic"
+  200: 'extralight', // "extralightitalic" if font-style is "italic"
+  300: 'light',      // "lightitalic" if font-style is "italic"
+  400: 'regular',    // "italic" if font-style is "italic"
+  500: 'medium',     // "mediumitalic" if font-style is "italic"
+  600: 'semibold',   // "semibolditalic" if font-style is "italic"
+  700: 'bold',       // "bolditalic" if font-style is "italic"
+  800: 'extrabold',  // "extrabolditalic" if font-style is "italic"
+  900: 'black'       // "blackitalic" if font-style is "italic"
+);
 
-$display-font: 'canto-pen';
+$primary-font: 'cinzel';
+$secondary-font: 'montserrat';
+$tertiary-font: 'spectral';
+
+$display-font: 'cinzel';
 $serif-font: 'spectral';
-$sans-font: 'cronos-pro';
+$sans-font: 'montserrat';
 $quote-font: 'spectral';
 $mono-font: 'anonymous';
 
@@ -64,32 +115,32 @@ $mono-font: 'anonymous';
  * - x-height:     Height of lowercase 'x' from baseline
  * - d-height:     Total height of lowercase characters with ascenders
  * - ch-width:     Average character width (used for sizing calculations)
- * - lsb-avarage:  Avarage empty space (in em) on the left side of upper case characters A-Z
+ * - lsb-adjust:  Avarage empty space (in em) on the left side of upper case characters A-Z
  * - ascender:     Maximum upward extension of the font from baseline
  * - descender:    Maximum downward extension of the font from baseline
- * 
- * Usage:
- * These metrics enable precise typography calculations and can be accessed using
- * SASS map functions, e.g.:
- * map-get(map-get($font-metrics, 'trajan'), 'cap-height')
+ * - weight-names: Optional map for font family custom weight names 
  */
- $font-metrics: (
-  'canto-pen': (
-    'font-family'   : '"Canto Pen"',
-    'cap-height'    : 0.621,
-    'ch-width'      : 0.497,
-    'lsb-avarage'   : 0.0379,
-    'ascender'      : 0.692,
-    'descender'     : 0.308,
+ $font-family-data: (
+  'cinzel': (
+    'font-family'   : '"Cinzel"',
+    'cap-height'    : 0.700, // sCapHeight normalized value to unitsPerEm
+    'd-height'      : 0.600, // yMax of lowercase letter "d" normalized value to unitsPerEm
+    'ch-width'      : 0.659, // xAvgCharWidth normalized value to unitsPerEm
+    'lsb-adjust'    : 0.060,
+    'ascender'      : 0.802, // baseline to top of em-box, normalized: (hhea: ascender - (ascender + descender - unitsPerEm) / 2)
+    'descender'     : 0.198, // baseline to bottom of em-box, normalized: (hhea: descender - (ascender + descender - unitsPerEm) / 2)
+    'weight-names'  : (), 
   ),
 
-  'cronos-pro': (
-    'font-family'   : '"Cronos Pro"',
-    'cap-height'    : 0.624,
-    'ch-width'      : 0.478,
-    'lsb-avarage'   : 0.0448,
-    'ascender'      : 0.78,
-    'descender'     : 0.22,
+  'montserrat': (
+    'font-family'   : '"Montserrat"',
+    'cap-height'    : 0.700,
+    'd-height'      : 0.742,
+    'ch-width'      : 0.638,
+    'lsb-adjust'    : 0.114,
+    'ascender'      : 0.859,
+    'descender'     : 0.141,
+    'weight-names'  : (), 
   ),
 
   'spectral': (
@@ -98,9 +149,10 @@ $mono-font: 'anonymous';
     'x-height'      : 0.450,
     'd-height'      : 0.750,
     'ch-width'      : 0.592,
-    'lsb-avarage'   : 0.0570,
-    'ascender'      : 0.830,
-    'descender'     : 0.170
+    'lsb-adjust'    : 0.065,
+    'ascender'      : 0.798,
+    'descender'     : 0.202,
+    'weight-names'  : (),
   ),
 
   'anonymous': (
@@ -109,19 +161,16 @@ $mono-font: 'anonymous';
     'x-height'      : 0.455,
     'd-height'      : 0.637,
     'ch-width'      : 0.546,
-    'lsb-avarage'   : 0.0104,
+    'lsb-adjust'    : 0.0104,
     'ascender'      : 0.817,
-    'descender'     : 0.183
+    'descender'     : 0.183,
+    'weight-names'  : (),
   )
 );
 
 // Help function
-@function get-font-metric($font-name, $property) {
-  @return map.get(map.get($font-metrics, $font-name), $property);
-}
-
-@function get-cap-ratio($font-name) {
-  @return math.div(get-font-metric($primary-font, 'cap-height'), get-font-metric($font-name, 'cap-height'));
+@function getFontMetric($font-name, $property) {
+  @return map.get(map.get($font-family-data, $font-name), $property);
 }
 
 /**
@@ -155,106 +204,106 @@ $mono-font: 'anonymous';
 $font-data: (
   // Hierarchical
   'primary': (
-    'font-family'   : get-font-metric($primary-font, 'font-family'),
+    'font-family'   : getFontMetric($primary-font, 'font-family'),
     'font-name'     : $primary-font,
-    'cap'           : get-font-metric($primary-font, 'cap-height'),
-    'cap-ratio'     : 1,
-    'd'             : get-font-metric($primary-font, 'd-height'),
-    'lsb'           : get-font-metric($primary-font, 'lsb-avarage'),
-    'ch'            : get-font-metric($primary-font, 'ch-width'),
-    'ascender'      : get-font-metric($primary-font, 'ascender'),
-    'descender'     : get-font-metric($primary-font, 'descender')
+    'cap'           : getFontMetric($primary-font, 'cap-height'),
+    'd'             : getFontMetric($primary-font, 'd-height'),
+    'lsb'           : getFontMetric($primary-font, 'lsb-adjust'),
+    'ch'            : getFontMetric($primary-font, 'ch-width'),
+    'ascender'      : getFontMetric($primary-font, 'ascender'),
+    'descender'     : getFontMetric($primary-font, 'descender'),
+    'weight-names'  : getFontMetric($primary-font, 'weight-names'),
   ),
 
   'secondary': (
-    'font-family'   : get-font-metric($secondary-font, 'font-family'),
+    'font-family'   : getFontMetric($secondary-font, 'font-family'),
     'font-name'     : $secondary-font,
-    'cap'           : get-font-metric($secondary-font, 'cap-height'),
-    'cap-ratio'     : get-cap-ratio($secondary-font),
-    'd'             : get-font-metric($secondary-font, 'd-height'),
-    'lsb'           : get-font-metric($secondary-font, 'lsb-avarage'),
-    'ch'            : get-font-metric($secondary-font, 'ch-width'),
-    'ascender'      : get-font-metric($secondary-font, 'ascender'),
-    'descender'     : get-font-metric($secondary-font, 'descender')
+    'cap'           : getFontMetric($secondary-font, 'cap-height'),
+    'd'             : getFontMetric($secondary-font, 'd-height'),
+    'lsb'           : getFontMetric($secondary-font, 'lsb-adjust'),
+    'ch'            : getFontMetric($secondary-font, 'ch-width'),
+    'ascender'      : getFontMetric($secondary-font, 'ascender'),
+    'descender'     : getFontMetric($secondary-font, 'descender'),
+    'weight-names'  : getFontMetric($secondary-font, 'weight-names'),
   ),
 
   'tertiary': (
-    'font-family'   : get-font-metric($tertiary-font, 'font-family'),
+    'font-family'   : getFontMetric($tertiary-font, 'font-family'),
     'font-name'     : $tertiary-font,
-    'cap'           : get-font-metric($tertiary-font, 'cap-height'),
-    'cap-ratio'     : get-cap-ratio($tertiary-font),
-    'd'             : get-font-metric($tertiary-font, 'd-height'),
-    'lsb'           : get-font-metric($tertiary-font, 'lsb-avarage'),
-    'ch'            : get-font-metric($tertiary-font, 'ch-width'),
-    'ascender'      : get-font-metric($tertiary-font, 'ascender'),
-    'descender'     : get-font-metric($tertiary-font, 'descender')
+    'cap'           : getFontMetric($tertiary-font, 'cap-height'),
+    'd'             : getFontMetric($tertiary-font, 'd-height'),
+    'lsb'           : getFontMetric($tertiary-font, 'lsb-adjust'),
+    'ch'            : getFontMetric($tertiary-font, 'ch-width'),
+    'ascender'      : getFontMetric($tertiary-font, 'ascender'),
+    'descender'     : getFontMetric($tertiary-font, 'descender'),
+    'weight-names'  : getFontMetric($tertiary-font, 'weight-names'),
   ),
 
   // Functinal
   'display': (
-    'font-family'   : get-font-metric($display-font, 'font-family'),
+    'font-family'   : getFontMetric($display-font, 'font-family'),
     'font-name'     : $display-font,
-    'cap'           : get-font-metric($display-font, 'cap-height'),
-    'cap-ratio'     : get-cap-ratio($display-font),
-    'd'             : get-font-metric($display-font, 'd-height'),
-    'lsb'           : get-font-metric($display-font, 'lsb-avarage'),
-    'ch'            : get-font-metric($display-font, 'ch-width'),
-    'ascender'      : get-font-metric($display-font, 'ascender'),
-    'descender'     : get-font-metric($display-font, 'descender')
+    'cap'           : getFontMetric($display-font, 'cap-height'),
+    'd'             : getFontMetric($display-font, 'd-height'),
+    'lsb'           : getFontMetric($display-font, 'lsb-adjust'),
+    'ch'            : getFontMetric($display-font, 'ch-width'),
+    'ascender'      : getFontMetric($display-font, 'ascender'),
+    'descender'     : getFontMetric($display-font, 'descender'),
+    'weight-names'  : getFontMetric($display-font, 'weight-names'),
   ),
 
   'serif': (
-    'font-family'   : get-font-metric($serif-font, 'font-family'),
+    'font-family'   : getFontMetric($serif-font, 'font-family'),
     'font-name'     : $serif-font,
-    'cap'           : get-font-metric($serif-font, 'cap-height'),
-    'cap-ratio'     : get-cap-ratio($serif-font),
-    'd'             : get-font-metric($serif-font, 'd-height'),
-    'lsb'           : get-font-metric($serif-font, 'lsb-avarage'),
-    'ch'            : get-font-metric($serif-font, 'ch-width'),
-    'ascender'      : get-font-metric($serif-font, 'ascender'),
-    'descender'     : get-font-metric($serif-font, 'descender')
+    'cap'           : getFontMetric($serif-font, 'cap-height'),
+    'd'             : getFontMetric($serif-font, 'd-height'),
+    'lsb'           : getFontMetric($serif-font, 'lsb-adjust'),
+    'ch'            : getFontMetric($serif-font, 'ch-width'),
+    'ascender'      : getFontMetric($serif-font, 'ascender'),
+    'descender'     : getFontMetric($serif-font, 'descender'),
+    'weight-names'  : getFontMetric($serif-font, 'weight-names'),
   ),
 
   'sans': (
-    'font-family'   : get-font-metric($sans-font, 'font-family'),
+    'font-family'   : getFontMetric($sans-font, 'font-family'),
     'font-name'     : $sans-font,
-    'cap'           : get-font-metric($sans-font, 'cap-height'),
-    'cap-ratio'     : get-cap-ratio($sans-font),
-    'd'             : get-font-metric($sans-font, 'd-height'),
-    'lsb'           : get-font-metric($sans-font, 'lsb-avarage'),
-    'ch'            : get-font-metric($sans-font, 'ch-width'),
-    'ascender'      : get-font-metric($sans-font, 'ascender'),
-    'descender'     : get-font-metric($sans-font, 'descender')
+    'cap'           : getFontMetric($sans-font, 'cap-height'),
+    'd'             : getFontMetric($sans-font, 'd-height'),
+    'lsb'           : getFontMetric($sans-font, 'lsb-adjust'),
+    'ch'            : getFontMetric($sans-font, 'ch-width'),
+    'ascender'      : getFontMetric($sans-font, 'ascender'),
+    'descender'     : getFontMetric($sans-font, 'descender'),
+    'weight-names'  : getFontMetric($sans-font, 'weight-names'),
   ),
 
   'quote': (
-    'font-family'   : get-font-metric($quote-font, 'font-family'),
+    'font-family'   : getFontMetric($quote-font, 'font-family'),
     'font-name'     : $quote-font,
-    'cap'           : get-font-metric($quote-font, 'cap-height'),
-    'cap-ratio'     : get-cap-ratio($quote-font),
-    'd'             : get-font-metric($quote-font, 'd-height'),
-    'lsb'           : get-font-metric($quote-font, 'lsb-avarage'),
-    'ch'            : get-font-metric($quote-font, 'ch-width'),
-    'ascender'      : get-font-metric($quote-font, 'ascender'),
-    'descender'     : get-font-metric($quote-font, 'descender')
+    'cap'           : getFontMetric($quote-font, 'cap-height'),
+    'd'             : getFontMetric($quote-font, 'd-height'),
+    'lsb'           : getFontMetric($quote-font, 'lsb-adjust'),
+    'ch'            : getFontMetric($quote-font, 'ch-width'),
+    'ascender'      : getFontMetric($quote-font, 'ascender'),
+    'descender'     : getFontMetric($quote-font, 'descender'),
+    'weight-names'  : getFontMetric($quote-font, 'weight-names'),
   ),
 
   'mono': (
-    'font-family'   : get-font-metric($mono-font, 'font-family'),
+    'font-family'   : getFontMetric($mono-font, 'font-family'),
     'font-name'     : $mono-font,
-    'cap'           : get-font-metric($mono-font, 'cap-height'),
-    'cap-ratio'     : get-cap-ratio($mono-font),
-    'd'             : get-font-metric($mono-font, 'd-height'),
-    'lsb'           : get-font-metric($mono-font, 'lsb-avarage'),
-    'ch'            : get-font-metric($mono-font, 'ch-width'),
-    'ascender'      : get-font-metric($mono-font, 'ascender'),
-    'descender'     : get-font-metric($mono-font, 'descender')
+    'cap'           : getFontMetric($mono-font, 'cap-height'),
+    'd'             : getFontMetric($mono-font, 'd-height'),
+    'lsb'           : getFontMetric($mono-font, 'lsb-adjust'),
+    'ch'            : getFontMetric($mono-font, 'ch-width'),
+    'ascender'      : getFontMetric($mono-font, 'ascender'),
+    'descender'     : getFontMetric($mono-font, 'descender'),
+    'weight-names'  : getFontMetric($mono-font, 'weight-names'),
   )
 );
 
 // Help Function
-@function get-font-data($font-name, $property) {
-  @return map-get(map-get($font-data, $font-name), $property);
+@function getFontData($font-name, $property) {
+  @return map.get(map.get($font-data, $font-name), $property);
 }
 
 /**
@@ -284,23 +333,12 @@ $font-data: (
  *   font-family: $primary-font-family;
  * }
 */
-$primary-font-family: get-font-data('primary', 'font-family');
-$secondary-font-family: get-font-data('secondary', 'font-family');
-$tertiary-font-family: get-font-data('tertiary', 'font-family');
+$primary-font-family: getFontData('primary', 'font-family');
+$secondary-font-family: getFontData('secondary', 'font-family');
+$tertiary-font-family: getFontData('tertiary', 'font-family');
 
-$display-font-family: get-font-data('display', 'font-family');
-$serif-font-family: get-font-data('serif', 'font-family');
-$sans-font-family: get-font-data('sans', 'font-family');
-$quote-font-family: get-font-data('quote', 'font-family');
-$mono-font-family: get-font-data('mono', 'font-family');
-
-// Cap Ratio Attrubutes
-$cr-primary: get-font-data('primary', 'cap-ratio');
-$cr-secondary: get-font-data('secondary', 'cap-ratio');
-$cr-tertiary: get-font-data('tertiary', 'cap-ratio');
-
-$cr-display: get-font-data('display', 'cap-ratio');
-$cr-serif: get-font-data('serif', 'cap-ratio');
-$cr-sans: get-font-data('sans', 'cap-ratio');
-$cr-quote: get-font-data('quote', 'cap-ratio');
-$cr-mono: get-font-data('mono', 'cap-ratio');
+$display-font-family: getFontData('display', 'font-family');
+$serif-font-family: getFontData('serif', 'font-family');
+$sans-font-family: getFontData('sans', 'font-family');
+$quote-font-family: getFontData('quote', 'font-family');
+$mono-font-family: getFontData('mono', 'font-family');
