@@ -25,20 +25,17 @@
     $include-sizes: (100, 200, 300, 400, 500)
   );
 
-  // Leading
+  // Line Hight/Leading
   $value: 100;
   @while $value <= 200 {
-    --leading-#{$value}: #{math.div($value, 100)}em;
+    --lh-#{$value}: #{math.div($value, 100)};
     $value: $value + 5;
   }
 
-  // Establish a fluid rhythm unit based on our base font size
-  // --fluid-rhythm: calc(var(--fs-300) * var(--line-height));
-
   // Font Families
   --primary-ff: #{var.$primary-font-family}, serif;
-  --secondary-ff: #{var.$secondary-font-family}, serif;
-  --tertiary-ff: #{var.$tertiary-font-family}, sans-serif;
+  --secondary-ff: #{var.$secondary-font-family}, sans-serif;
+  --tertiary-ff: #{var.$tertiary-font-family}, serif;
   --quote-ff: #{var.$quote-font-family}, serif;
   --mono-ff: #{var.$mono-font-family}, monospace;
 
@@ -57,7 +54,7 @@
   // Font Familes Bold Weight
   --primary-bold: 700;
   --secondary-bold: 700;
-  --tertiary-bold: 600;
+  --tertiary-bold: 700;
   --quote-bold: 700;
   --mono-bold: 700;
 
@@ -67,7 +64,6 @@
   --detail-bold: var(--secondary-bold);
 }
 
-
 //* Font Properties
 .text-properties {
   font-size: var(--font-size);
@@ -76,8 +72,10 @@
   font-style: var(--font-style);
   letter-spacing: var(--letter-spacing);
   text-transform: var(--text-transform);
+  text-rendering: geometricPrecision;
 }
 
+//*** Line-height to leading system START
 // Mixin for cap-to-baseline trimming
 @mixin trim-cap-to-baseline($font: 'primary', $text-height: 'cap', $block: true) {
   @if $block {
@@ -86,33 +84,40 @@
   @if not index(('cap', 'd'), $text-height) {
     @error "Invalid $text-height '#{$text-height}'. Must be 'cap' or 'd'.";
   }
+  $font-data: map.get(var.$font-data, $font);
   // Set font-specific metrics as custom properties
-  --th: #{map.get(map.get(var.$font-data, $font), $text-height)};
-  --asc: #{map.get(map.get(var.$font-data, $font), 'ascender')};
-  --dec: #{map.get(map.get(var.$font-data, $font), 'descender')};
-  $lsb-value: map.get(map.get(var.$font-data, $font), 'lsb');
-  @if $lsb-value != null and $lsb-value != 0 {
-    --lsb: -#{$lsb-value}em;
-  } @else {
-    --lsb: 0;
-  }
+  $textHeight: map.get($font-data, $text-height);
+  $ascender: map.get($font-data, 'ascender');
+  $descender: map.get($font-data, 'descender');
+  $emBoxExceed: math.div($ascender + $descender - 1, 2);
+  $ascenderDiff: $ascender - $emBoxExceed - $textHeight;
+  $descenderDiff: $descender - $emBoxExceed;
+  $leftSideBearing: map.get($font-data, 'lsb');
+
   // Left Side Bearing compensation
-  margin-inline-start: var(--lsb);
+  @if $leftSideBearing != null and $leftSideBearing != 0 {
+    margin-inline-start: -#{$leftSideBearing + 'em'};
+  } @else {
+    margin-inline-start: 0;
+  }
+
   // Common ::before and ::after elements properties
   &::before, &::after {
     content: "";
     display: table;
   }
-  // The negative margin top removes the space above the capital characters so that the top of the capital character aliigning with the top of the text element 
+  // Trim before and after
   &::before {
-    /// line-height - 1em, example: (1.5em - 1em) / -2 = 0.5em / -2 = -0.25. the empty space of the line-height as a negative value for removing space.
-    /// line-height - 1em / -2
-    /// -1em * (ascender - cap-height): -1em * (0.75 - 0.65) = 
-    margin-top: calc(((var(--line-height) - 1em) / -2) + (-1em * (var(--asc) - var(--th))));
+    margin-bottom: calc(((1 - var(--line-height)) * 0.5 - #{$ascenderDiff}) * 1em);
+    @supports (margin-bottom: 1lh) {
+      margin-bottom: calc(((1lh - 1em) * -0.5) - #{$ascenderDiff}em);
+    }
   }
-  // The negative margin bottom removes the space beneath the baseline so that the baseline aligns with the bottom of the text element
   &::after {
-    margin-bottom: calc(((var(--line-height) - 1em) / -2) + (-1em * var(--dec)));
+    margin-bottom: calc(((1 - var(--line-height)) * 0.5 - #{$descenderDiff}) * 1em);
+    @supports (margin-bottom: 1lh) {
+      margin-bottom: calc(((1lh - 1em) * -0.5) - #{$descenderDiff}em);
+    }
   }
 
   // Modern approach for supporting browsers
@@ -121,7 +126,7 @@
     @if $text-height == 'cap' {
       text-box-edge: cap alphabetic; // Top: cap height, Bottom: baseline
     } @else if $text-height == 'd' {
-      text-box-edge: leading alphabetic; // Top: ascender height, Bottom: baseline
+      text-box-edge: cap alphabetic; // Top: cap height, Bottom: baseline
     }
     &::before, &::after {
       display: none; // Remove pseudo-elements when modern properties are supported
@@ -129,7 +134,6 @@
   }
 }
 
-//*** Line-height to leading system START
 // Font metric classes with trimming
 .primary-text {
   font-family: var(--primary-ff);
@@ -157,7 +161,6 @@
 }
 //*** Line-height to leading system END
 
-
 // Font Sizes Utility classes
 .fs-100 {font-size: var(--fs-100) !important;}
 .fs-200 {font-size: var(--fs-200) !important;}
@@ -170,6 +173,10 @@
 .fs-900 {font-size: var(--fs-900) !important;}
 
 // Margins
+[class^="heading-"] + *, [class^="display-"] + * {
+  margin-block-start: 1.5rem;
+}
+
 [class^="heading-"] + [class^="heading-"] {
   margin-block-start: 1.5em;
 }
@@ -188,25 +195,23 @@ p[class^="heading-"] + p[class^="heading-"] {
     @include mx.f-setup (
       $font: 'primary',
       $font-size: var(--fs-900),
-      $line-height: 1.1em,
+      $line-height: 1.1,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--primary-des) * 1.5);
   }
   &-2 {
     @include mx.f-setup (
       $font: 'primary',
       $font-size: var(--fs-800),
-      $line-height: 1.1em,
+      $line-height: 1.1,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--primary-des) * 1.5);
   }
 }
 
@@ -215,49 +220,45 @@ p[class^="heading-"] + p[class^="heading-"] {
     @include mx.f-setup (
       $font: 'primary',
       $font-size: var(--fs-700),
-      $line-height: 1.1em,
+      $line-height: 1.1,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--primary-des) * 1.5);
   }
   &-2 {
     @include mx.f-setup (
       $font: 'primary',
       $font-size: var(--fs-600),
-      $line-height: 1.15em,
+      $line-height: 1.15,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--primary-des) * 1.5);
   }
   &-3 {
     @include mx.f-setup (
       $font: 'primary',
       $font-size: var(--fs-500),
-      $line-height: 1.2em,
+      $line-height: 1.2,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--primary-des) * 1.5);
   }
   &-4 {
     @include mx.f-setup (
       $font: 'primary',
       $font-size: var(--fs-400),
-      $line-height: 1.25em,
+      $line-height: 1.25,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--primary-des) * 1.5);
   }
 
   &--bold {
@@ -270,68 +271,62 @@ p[class^="heading-"] + p[class^="heading-"] {
     @include mx.f-setup (
       $font: 'tertiary',
       $font-size: var(--text-500),
-      $line-height: 1.4em,
+      $line-height: 1.4,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--tertiary-des) * 1.5);
   }
   &-medium {
     @include mx.f-setup (
       $font: 'tertiary',
       $font-size: var(--text-400),
-      $line-height: 1.45em,
+      $line-height: 1.45,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--tertiary-des) * 1.5);
   }
   &-normal, &-default {
     @include mx.f-setup (
       $font: 'tertiary',
       $font-size: var(--text-300),
-      $line-height: 1.5em,
+      $line-height: 1.5,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--tertiary-des) * 1.5);
   }
   &-small {
     @include mx.f-setup (
       $font: 'tertiary',
       $font-size: var(--text-200),
-      $line-height: 1.55em,
+      $line-height: 1.55,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--tertiary-des) * 1.5);
   }
   &-tiny {
     @include mx.f-setup (
       $font: 'tertiary',
       $font-size: var(--text-100),
-      $line-height: 1.6em,
+      $line-height: 1.6,
       $font-weight: 400,
       $font-style: normal,
       $letter-spacing: normal,
       $text-transform: none,
     );
-    //margin-block-end: calc(var(--tertiary-des) * 1.5);
   }
 
   &--bold {
     --font-weight: var(--terriary-bold);
   }
 }
-
 
 .title-box {
   display: block;
@@ -360,9 +355,8 @@ p[class^="heading-"] + p[class^="heading-"] {
     @include mx.f-setup (
       $font: 'primary',
       $font-size: 1em,
-      $line-height: 1.1em
+      $line-height: 1.1
     );
-    margin-block-end: calc(var(--primary-des) * 1);
 
     &--bold {
       --font-weight: var(--primary-bold);
@@ -372,9 +366,10 @@ p[class^="heading-"] + p[class^="heading-"] {
   &__subtitle {
     @include mx.f-setup (
       $font: 'secondary',
-      $font-size: calc(1em * #{var.$cr-secondary} / var(--phi)),
-      $line-height: 1.2em
+      $font-size: calc(1em / var(--phi)),
+      $line-height: 1.2
     );
+    margin-block-start: 0.5em;
 
     &--bold {
       --font-weight: var(--secondary-bold);
@@ -382,19 +377,30 @@ p[class^="heading-"] + p[class^="heading-"] {
   }
 
   & + p, & + .text-box {
-    margin-block-start: 1em;
+    margin-block-start: 1.5em;
   }
+
+  @supports selector(:has(*)) {
+    & + p, & + .text-box {
+      margin-block-start: unset;
+    }
+    &:has( + p), &:has( + .text-box) {
+      margin-block-end: 1.5rem;
+    }
+  }
+
+  
 }
 
 .text-box {
   width: min(100%, 70ch);
 
   p {
-    margin-block-end: 0;
+    margin-block-end: unset;
   }
 
   p + p {
-    margin-top: 1.5rem;
+    margin-block-start: min(1.5em, 1.5 * var(--text-500));
   }
 }
 
