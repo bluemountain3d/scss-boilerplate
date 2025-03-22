@@ -1,36 +1,80 @@
-//*** CSS Reset ***//
+/// CSS Reset
+/// =========
 
-@use '../abstracts/variables' as var;
+/// @description A modern CSS reset that removes browser inconsistencies and
+/// establishes a clean foundation for styling. Incorporates accessibility
+/// best practices and responsive defaults.
 
+@use '../abstracts/variables/__index__' as var;
+
+/// @name Box Sizing Reset
+/// @description Sets all elements to use box-sizing: border-box
+/// to create more predictable layout behavior
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-// Set Smooth scroll
+/// @name Smooth Scrolling
+/// @description Enables smooth scrolling behavior for anchor links
+/// Note: This is automatically disabled for users with reduced motion preferences
 html {
   scroll-behavior: smooth;
 }
 
-/* Remove Margin and padding */
+/// @name Margin and Padding Reset
+/// @description Removes default margins and paddings from common elements
+/// to provide a clean baseline for consistent spacing
 body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, blockquote, figure, hr, form, fieldset, legend, button, input, textarea {
   margin: 0;
   padding: 0;
 }
 
-/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+/// @name List Style Reset
+/// @description Removes bullets from lists with role="list" 
+/// while preserving semantic meaning
 ul[role='list'],
 ol[role='list'] {
   list-style: none;
 }
 
-/* <a> elements that don't have a class get default styles */
+/// @name Link Decoration
+/// @description Improves underline appearance for links without classes
+/// by allowing underlines to be interrupted by descenders
 a:not([class]) {
   text-decoration-skip-ink: auto;
 }
 
-/* Responsive images and video */
+/// @name Media Element Reset
+/// @description Makes images, videos, and other media elements responsive by default
+/// - display: block removes unwanted space below elements
+/// - max-width: 100% makes elements responsive within their containers
+/// - height: auto maintains proper aspect ratio when width changes
 img, picture, svg, video, canvas {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+/// @name Form Element Reset
+/// @description Improves form element consistency across browsers
+/// and makes them easier to style
+button, input, select, textarea {
+  font: inherit; //Adopts the font from the parent element
+  color: inherit; //Adopts text color from the parent element
+}
+
+/// @name Button Reset
+/// @description Makes buttons more predictable to style
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/// @name Text Rendering
+/// @description Improves legibility and consistency of text
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
 }

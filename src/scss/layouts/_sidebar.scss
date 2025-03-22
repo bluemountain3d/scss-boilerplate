@@ -1,14 +1,10 @@
-//*** Layout: Sidebar ***//
+/// Layout: Sidebar
+/// ===============
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
 
-$_module-name: 'Page Sidebar';
-
-/* ### #{$_module-name} START */
-
-
-
-/* ### #{$_module-name} END
-/* ------------------------------------------------------------ */
+.sidebar {
+  // ...
+}

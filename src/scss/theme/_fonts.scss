@@ -1,214 +1,76 @@
-//*** Theme: Fonts ***//
-/**
- * Font Face Declarations with Dynamic Size Adjustment
- * --------------------------------------------------
- * A comprehensive SCSS module for managing typography with intelligent size normalization.
- * 
- * Key features:
- * - Programmatic @font-face generation via mixins
- * - Dynamic font path construction based on font metadata
- * - Automatic size-adjust calculations to normalize apparent sizes across font families
- * - Support for custom weight naming schemes per font family
- * - Configurable font display strategies
- * 
- * The size-adjust calculations ensure consistent visual sizing by analyzing cap heights,
- * producing values that scale secondary fonts relative to the primary font:
- * 
- *   size-adjust = (primary-cap-height / target-cap-height) * 100%
- * 
- * This creates harmonious typography even when mixing different typefaces with 
- * inherently different proportions.
- * 
- * Font families included:
- * - Cinzel (Primary): Display/heading font
- * - Montserrat (Secondary): Sans-serif UI/subtitle/details font
- * - Spectral (Tertiary): Serif body text font with italic variant for quotes
- */
+/// Theme: Fonts
+/// ============
+///
+/// Font configurations and font-face declarations for the site's typography.
+/// This file manages the loading strategy and optimization for web fonts.
+///
+/// ## Font Loading Strategy
+///
+/// This implementation uses:
+/// - WOFF2 format for optimal compression and modern browser support
+/// - `font-display: swap` to ensure text remains visible during font loading
+/// - Local font checking with `local('')` to use system fonts when available
+/// - Size adjustment for consistent rendering across fallback and loaded fonts
+///
+/// ## Usage Example
+///
+/// In your typography files:
+/// ```scss
+/// body {
+///   font-family: "FontFamily Name", fallback-font-stack, sans-serif;
+/// }
+/// ```
+///
+/// ## Performance Considerations
+///
+/// - Only essential font weights and styles are included to minimize payload
+/// - WOFF2 provides ~30% better compression than WOFF
+/// - size-adjust helps prevent layout shifts when fonts load
+/// @end
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
 
-@use 'sass:map';
-@use 'sass:math';
+/// Primary font face declaration
+/// -----------------------------
+/// Loads the primary font used throughout the site
+///
+/// @example scss
+/// .element {
+///   font-family: "FontFamily Name", system-ui, sans-serif;
+/// }
+/// @end
 
-// Function to build file paths based on font key and properties
-@function buildFontPath($font-key: 'primary', $weight: 400, $style: normal) {
-  $font-data: map.get(var.$font-data, $font-key);
-  $path: #{var.$font-path + map.get($font-data, 'font-name')};
-  $file-name-prefix: map.get($font-data, 'file-prefix') or map.get($font-data, 'font-name');
-  
-  // Check for custom weight mapping in font data
-  $weight-name: '';
-  $custom-weights-map: map.get($font-data, 'weight-names');
-  
-  @if $custom-weights-map and map.has-key($custom-weights-map, $weight) {
-    // Use custom weight name from font data if available
-    $weight-name: map.get($custom-weights-map, $weight);
-  } @else {
-    // Otherwise use generic weight map
-    $weight-name: map.get(var.$font-weights-map, $weight);
-  }
-  
-  // Handle italic styles
-  @if $style != normal {
-    @if $weight == 400 {
-      $weight-name: 'italic'; // Just 'italic' for regular weight
-    } @else {
-      $weight-name: #{$weight-name + 'italic'};
-    }
-  }
-  
-  // Build and return the full path
-  @return '#{$path}/#{$file-name-prefix}-#{$weight-name}.woff2';
+@font-face {
+  font-family: "FontFamily Name";
+  src: local(''),  // Try local version first (empty string checks for exact name match)
+       url('../path/to/font/font-file-name.woff2') format('woff2');
+  font-weight: 400;  // Weight of font: Thin (100), Extra Light (200), Light (300), Regular (400), Medium (500), Semi Bold (600), Bold (700), Extra Bold (800), Black (900)
+  font-style: normal;  // Options: normal, italic, oblique
+  font-display: swap;  // Text remains visible during font loading
+  size-adjust: 100%;   // Helps prevent layout shifts when font loads
 }
 
-
-// Function to calculate size adjustment based on cap heights
-@function calculateSizeAdjust($font-key: 'primary', $decimals: 2) {
-  @if $font-key == 'primary' {
-    @return 100%; // Primary font is the baseline
-  }
-  
-  $primary-cap-height: map.get(map.get(var.$font-data, 'primary'), 'cap');
-  $target-cap-height: map.get(map.get(var.$font-data, $font-key), 'cap');
-  
-  // Calculate adjustment
-  $adjustment: math.div($primary-cap-height, $target-cap-height) * 100;
-  
-  // Round to specified decimal places
-  $multiplier: math.pow(10, $decimals);
-  $adjustment: math.div(math.round($adjustment * $multiplier), $multiplier);
-  
-  @return #{$adjustment + '%'};
+/// @example - Additional font weights and styles
+///
+/// @font-face {
+///   font-family: "FontFamily Name";
+///   src: local(''),
+///        url('../path/to/font/font-file-name-bold.woff2') format('woff2');
+///   font-weight: 700;
+///   font-style: normal;
+///   font-display: swap;
+///   size-adjust: 100%;
+/// }
+///
+/// @font-face {
+///   font-family: "FontFamily Name";
+///   src: local(''),
+///        url('../path/to/font/font-file-name-italic.woff2') format('woff2');
+///   font-weight: 400;
+///   font-style: italic;
+///   font-display: swap;
+///   size-adjust: 100%;
+/// }
 }
-
-
-// Mixin version to actually output the @font-face rule
-@mixin font-face($font-key: 'primary', $weight: 400, $style: normal, $display: swap) {
-  $font-data: map.get(var.$font-data, $font-key);
-  $font-family: map.get($font-data, 'font-family');
-  $font-path: buildFontPath($font-key, $weight, $style);
-  $size-adjust: calculateSizeAdjust($font-key);
-  
-  @font-face {
-    font-family: #{$font-family};
-    src: local(''),
-         url('#{$font-path}') format('woff2');
-    font-weight: $weight;
-    font-style: $style;
-    font-display: $display;
-    size-adjust: $size-adjust;
-  }
-}
-
-// Create @font-face
-@include font-face($font-key: 'primary', $weight: 400);
-@include font-face($font-key: 'primary', $weight: 700);
-@include font-face($font-key: 'secondary', $weight: 400);
-@include font-face($font-key: 'secondary', $weight: 700);
-@include font-face($font-key: 'tertiary', $weight: 400);
-@include font-face($font-key: 'tertiary', $weight: 700);
-@include font-face($font-key: 'quote', $weight: 400, $style: italic, $display: swap);
- 
-
-
-
-
-
-// Get Cap Heights for all font families
-// $primary-cap: map.get(map.get(var.$font-data, 'primary'), 'cap');
-// $secondary-cap: map.get(map.get(var.$font-data, 'secondary'), 'cap');
-// $tertiary-cap: map.get(map.get(var.$font-data, 'tertiary'), 'cap');
-// $quote-cap: map.get(map.get(var.$font-data, 'quote'), 'cap');
-// $mono-cap: map.get(map.get(var.$font-data, 'mono'), 'cap');
-
-// Set decimal places
-// $decimal-places: 2;
-// $multiplier: math.pow(10, $decimal-places);
-
-// Set adjustments
-// $secondary-adjustment: math.div($primary-cap, $secondary-cap) * 100;
-// $secondary-adjustment: math.div(math.round($secondary-adjustment * $multiplier), $multiplier);
-
-// $tertiary-adjustment: math.div($primary-cap, $tertiary-cap) * 100;
-// $tertiary-adjustment: math.div(math.round($tertiary-adjustment * $multiplier), $multiplier);
-
-// $quote-adjustment: math.div($primary-cap, $quote-cap) * 100;
-// $quote-adjustment: math.div(math.round($quote-adjustment * $multiplier), $multiplier);
-
-// $mono-adjustment: math.div($primary-cap, $mono-cap) * 100;
-// $mono-adjustment: math.div(math.round($mono-adjustment * $multiplier), $multiplier);
-
-// Primary
-// @font-face {
-//   font-family: #{var.$primary-font-family};
-//   src: local(''),
-//        url('../fonts/cinzel/cinzel-regular.woff2') format('woff2');
-//   font-weight: 400;
-//   font-style: normal;
-//   font-display: swap;
-//   size-adjust: 100%;
-// }
-// @font-face {
-//   font-family: #{var.$primary-font-family};
-//   src: local(''),
-//        url('../fonts/cinzel/cinzel-bold.woff2') format('woff2');
-//   font-weight: 700;
-//   font-style: normal;
-//   font-display: swap;
-//   size-adjust: 100%;
-// }
-
-// Secondary
-// @font-face {
-//   font-family: #{var.$secondary-font-family};
-//   src: local(''),
-//        url('../fonts/montserrat/montserrat-regular.woff2') format('woff2');
-//   font-weight: 400;
-//   font-style: normal;
-//   font-display: swap;
-//   // size-adjust: #{$secondary-adjustment + '%'};
-// }
-// @font-face {
-//   font-family: #{var.$secondary-font-family};
-//   src: local(''),
-//        url('../fonts/montserrat/montserrat-bold.woff2') format('woff2');
-//   font-weight: 700;
-//   font-style: normal;
-//   font-display: swap;
-//   // size-adjust: #{$secondary-adjustment + '%'};
-// }
-
-// tertiary
-// @font-face {
-//   font-family: 'Spectral';
-//   src: local(''),
-//        url('../fonts/spectral/spectral-regular.woff2') format('woff2');
-//   font-weight: 400;
-//   font-style: normal;
-//   font-display: swap;
-//   // size-adjust: #{$tertiary-adjustment + '%'};
-// }
-// @font-face {
-//   font-family: 'Spectral';
-//   src: local(''),
-//        url('../fonts/spectral/spectral-bold.woff2') format('woff2');
-//   font-weight: 700;
-//   font-style: normal;
-//   font-display: swap;
-//   // size-adjust: #{$tertiary-adjustment + '%'};
-// }
-
-// quote
-// @font-face {
-//   font-family: 'Spectral';
-//   src: local(''),
-//        url('../fonts/spectral/spectral-regular.woff2') format('woff2');
-//   font-weight: 400;
-//   font-style: italic;
-//   font-display: swap;
-//   // size-adjust: #{$tertiary-adjustment + '%'};
-// }
-
-// mono

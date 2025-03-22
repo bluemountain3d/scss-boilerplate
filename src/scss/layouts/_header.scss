@@ -1,24 +1,20 @@
-//*** Layout: Header ***//
+/// Layout: Main Header
+/// ==============
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
 
-$_module-name: 'Page Header';
+ @use '../abstracts/variables/__index__' as var;
+ @use '../abstracts/functions/__index__' as fn;
+ @use '../abstracts/mixins/__index__' as mx;
+ 
+ @use 'sass:color';
+ @use 'sass:list';
+ @use 'sass:map';
+ @use 'sass:math';
+ @use 'sass:meta';
+ @use 'sass:selector';
+ @use 'sass:string';
 
-/* ### #{$_module-name} START */
-
-.header {
-
-  &__brand {
-    // ...
-  }
-
-  &__nav {
-    // ...
-  }
-
+.main-header {
+  z-index: 9999;
+  // ...
 }
-
-/* ### #{$_module-name} END
-/* ------------------------------------------------------------ */

@@ -1,38 +1,92 @@
-//*** Layout: Container ***//
+/// Layout: Container
+/// =================
+///
+/// Core layout components for structuring content across the site.
+/// This module provides responsive containers and section elements that 
+/// maintain proper spacing and alignment.
+///
+/// ## Container System
+///
+/// The container system consists of three main classes:
+/// 
+/// 1. `.container` - A base container with full width, container queries enabled
+/// 2. `.container-boxed` - A centered container with max-width (1440px) and horizontal padding
+/// 3. `.container-narrow` - A centered container with reduced max-width (1152px) for improved readability
+///
+/// ## Usage Example
+///
+/// ```html
+/// <section class="section">
+///   <div class="container-boxed">
+///     <!-- Content here will be responsively contained -->
+///     <article>...</article>
+///   </div>
+/// </section>
+/// ```
+///
+/// ## Container Query Support
+///
+/// All containers use `container-type: inline-size` for container queries.
+/// This enables child elements to adapt based on container width rather than viewport.
+///
+/// ```scss
+/// @container (min-width: 30rem) {
+///   .responsive-element {
+///     display: flex;
+///   }
+/// }
+/// ```
+/// @end
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
 
-$_module-name: 'Container';
+$max-content-width: 90rem; // 1440px
 
-/* ### #{$_module-name} START */
+/// Standard section wrapper
+/// Provides consistent vertical spacing between major page sections
+/// @example html
+/// <section class="section">
+///   <div class="container-boxed">Content goes here</div>
+/// </section>
+.section {
+  width: 100%;
+  padding-block: var(--gap-section);
+}
 
+/// Base container
+/// Enables container queries and serves as the foundation for other container variations
+/// @example html
+/// <div class="container">Full-width content</div>
 .container {
+  container-type: inline-size;
   position: relative;
   width: 100%;
 
-  &--full-width {
-    @extend .container;
-    margin-inline: calc(-50% + 50vw);
-  }
-
-  &--boxed, &--narrow {
+  /// Boxed container
+  /// Centers content with a maximum width and responsive horizontal padding
+  /// Uses clamp() to scale padding proportionally based on container width
+  /// @example html
+  /// <div class="container-boxed">Boxed content with max-width</div>
+  &-boxed, &-narrow {
     @extend .container;
     margin-inline: auto;
-    padding-inline: min(3.125%, .75rem);
-    
+    padding-inline: clamp(0.75rem, round(3.125cqw, 1px), round($max-content-width * 0.03125));
   }
 
-  &--boxed {
-    max-width: var.$max-content-width;
+  /// Standard boxed container
+  /// Uses the main content width (1440px at 16px root font size)
+  &-boxed {
+    max-width: $max-content-width; // 90rem (1440px at 16px root)
   }
 
-  &--narrow {
-    max-width: calc(var.$max-content-width * .8);
+  /// Narrow container
+  /// More constrained width (80% of max-content-width = 1152px) for improved readability
+  /// Ideal for text-heavy content like articles or blog posts
+  /// @example html
+  /// <div class="container-narrow">Content with optimal reading width</div>
+  &-narrow {
+    max-width: round(calc($max-content-width * 0.8), 1px); // 72rem (1152px at 16px root)
   }
 }
-
-
-/* ### #{$_module-name} END
-/* ------------------------------------------------------------ */

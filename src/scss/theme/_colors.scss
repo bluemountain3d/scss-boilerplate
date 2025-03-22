@@ -1,14 +1,73 @@
-//*** Theme Colors ***//
+/// Theme Colors
+/// ============
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+/// @description A flexible theme system that supports both light and dark modes
+/// using CSS custom properties. This system respects user system preferences
+/// while allowing explicit theme overrides via CSS classes.
 
-$_module-name: 'Colors';
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
 
-/* ### #{$_module-name} START */
+@use 'sass:color';
+@use 'sass:map';
 
+/// Theme Light
+/// @description Defines CSS custom properties for the light theme. The color values
+/// shown here are just examples - replace with your own preferred color palette.
+@mixin themeLight {
+  --color-primary: #3a86ff; /// @desc Primary brand color (example value)
+  --color-secondary: #8ecae6; /// @desc Secondary brand color (example value)
+  --color-accent: #fb5607; /// @desc Accent color for highlights and CTAs (example value)
+  
+  /// Add your own custom color variables below
+  /// --color-text: #333333;
+  /// --color-background: #ffffff;
+}
 
+/// Theme Dark
+/// @description Defines CSS custom properties for the dark theme. The color values
+/// shown here are just examples - replace with your own preferred color palette.
+@mixin themeDark {
+  --color-primary: #4361ee; /// @desc Primary brand color (example value)
+  --color-secondary: #3f37c9; /// @desc Secondary brand color (example value)
+  --color-accent: #f72585; /// @desc Accent color for highlights and CTAs (example value)
+  
+  /// Add your own custom color variables below
+  /// --color-text: #e5e5e5;
+  /// --color-background: #121212;
+}
 
-/* ### #{$_module-name} END
-/* ------------------------------------------------------------ */
+/// Default theme application
+/// Sets light theme as default and allows explicit class overrides
+:root, .theme-light {
+  @include themeLight();
+}
+
+/// Dark theme application 
+/// Applied when the .theme-dark class is present
+.theme-dark {
+  @include themeDark();
+}
+
+/// System preference detection - Light mode
+/// Applies light theme when system preference is light
+/// Unless explicitly overridden with .theme-dark class
+@media (prefers-color-scheme: light) {
+  &:not(.theme-dark) {
+    :root {
+      @include themeLight();
+    }
+  }
+}
+
+/// System preference detection - Dark mode
+/// Applies dark theme when system preference is dark
+/// Unless explicitly overridden with .theme-light class
+@media (prefers-color-scheme: dark) {
+  &:not(.theme-light) {
+    :root {
+      @include themeDark();
+    }
+  }
+}

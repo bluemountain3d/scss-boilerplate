@@ -1,8 +1,32 @@
-//*** Abstracts Function: Add unit ***//
+/// @group Abstracts/Functions
+/// @name Add Unit
+/// @description
+/// 
+/// =======================
 
-@use '../variables' as var;
+@use '../variables/__index__' as var;
 
 @use 'sass:math';
+
+/// Adds a unit to a unitless value
+/// -------------------------------
+/// Safely appends a specified unit to a unitless number. If the value already has a unit,
+/// it will be returned unchanged to prevent unit conversion issues. This is useful for
+/// ensuring consistent units across a codebase without duplicating unit handling logic.
+/// 
+/// @param {Number} $value - The value to add a unit to
+/// @param {String} $unit - The unit to add (e.g., 'px', 'em', '%', etc.)
+/// 
+/// @returns {Number} The value with the specified unit
+/// 
+/// @example
+///   addUnit(16, 'px') => 16px
+///   addUnit(1.5, 'em') => 1.5em
+///   addUnit(20px, 'em') => 20px (original unit preserved)
+///   addUnit(0, '%') => 0%
+/// 
+/// Note: This function preserves existing units to prevent unexpected behavior that could
+/// result from forced unit conversion. Only adds units to unitless values.
 
 @function addUnit($value, $unit) {
   @if math.is-unitless($value) {

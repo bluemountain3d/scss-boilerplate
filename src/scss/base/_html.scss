@@ -1,20 +1,12 @@
-//*** Base: HTML ***//
+/// Base: HTML
+/// ==========
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
 
-$_module-name: "HTML";
-
-/* ### #{$_module-name} START */
+/// Set all font related properties in ./src/scss/themes/_typography.scss
 
 html {
   scroll-behavior: smooth;
-  text-size-adjust: 100%;
-  font-size: 100%;
-  line-height: 1.2;
 }
-
-
-/* ### #{$_module-name} END
-/* ------------------------------------------------------------ */

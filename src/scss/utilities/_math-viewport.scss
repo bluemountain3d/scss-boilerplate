@@ -1,22 +1,40 @@
-//*** Utilities: Math & Viewport ***//
+/// Utilities: Math & Viewport
+/// ==========================
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
 
 @use 'sass:math';
 
+/// @name Root Mathematical and Viewport Variables
+/// @description Defines mathematical constants and custom viewport units as CSS variables
+/// @access public
 :root {
-  //* Mathematical constants
+  /// @prop {Number} --pi [3.1415926536] - The mathematical constant pi (π)
+  /// @example css
+  ///   border-radius: calc(var(--pi) * 1rem / 2); // Creates a semi-circle
   --pi: 3.1415926536;                         // The number pi π
+  
+  /// @prop {Number} --phi [1.618033988749895] - The Golden Ratio (φ)
+  /// @example css
+  ///   aspect-ratio: var(--phi); // Creates a golden rectangle
   --phi: #{math.div(1 + math.sqrt(5), 2)};    // Golden Ratio phi φ
+  
+  /// @prop {Number} --sqrt-2 [1.4142135623730951] - Square root of 2
+  /// @example css
+  ///   diagonal-length: calc(side-length * var(--sqrt-2)); // Diagonal of a square
   --sqrt-2: #{math.sqrt(2)};                  // Square root of 2
 
-  //* Viewport variables
+  /// @prop {Length} --vwx [1vw] - Responsive viewport unit that adapts to different screen types
+  /// @example css
+  ///   font-size: calc(1rem + 0.5 * var(--vwx)); // Fluid typography
   --vwx: 1vw;                                 // Responsive viewport unit
 
-  //* Ultra wide screens adjustment
+  /// @name Ultra-wide Screen Adaptation
+  /// @description Changes the viewport unit reference from width to height on very wide screens
+  /// to prevent elements from becoming too large on ultrawide monitors
   @include mx.for-ultra-wide {
-    --vwx: 2vh;
+    --vwx: 2vh;                              // Switch to height-based scaling
   }
 }

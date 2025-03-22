@@ -1,417 +1,240 @@
-//*** Theme Typography ***//
+/// Theme Typography
+/// ================
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+/// @description Basic typography settings establishing consistent font styles,
+/// responsive sizes, and vertical rhythm for your project. These settings 
+/// provide a foundation that you can easily customize.
 
-@use 'sass:math';
-@use 'sass:map';
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
 
-
-// Typography global custom properties
+/// @name Font Size Variables
+/// @description Defines the base font size system with fluid scaling and size variants.
+/// Sizes are calculated based on a fluid base size that adapts to viewport width.
 :root {
-  @include mx.fluid-font-size(
-    $prefix: 'fs', 
-    $vwx: true, 
-    $method: 'clamp'
-  );
+  // Base font sizes and fluid scaling
+  --fs-base: calc(var(--fs-clamp) * 1);    // Base font size reference
+  --fs-clamp: round(clamp(1rem, 0.7642rem + #{1.0142 * var.$vwx}, 1.25rem), 1px);  // Fluid scaling from 16px to 20px
+  --fs-fluid: round(max(1rem, 0.7642rem + #{1.0142 * var.$vwx}), 1px);  // Alternative fluid scaling with minimum size
 
-  @include mx.fluid-font-size(
-    $prefix: 'text', 
-    $minScale: 1.125,
-    $maxScale: 1.125,
-    $vwx: true, 
-    $method: 'clamp',
-    $include-sizes: (100, 200, 300, 400, 500)
-  );
+  // Heading size scale - proportional to the fluid base
+  --fs-100: calc(var(--fs-clamp) * 0.75);  // Smallest heading (12px at 16px base)
+  --fs-200: calc(var(--fs-clamp) * 0.875); // Small heading (14px at 16px base)
+  --fs-300: calc(var(--fs-clamp) * 1);     // Base heading (16px at 16px base)
+  --fs-400: calc(var(--fs-clamp) * 1.5);   // Medium heading (24px at 16px base)
+  --fs-500: calc(var(--fs-clamp) * 2);     // Large heading (32px at 16px base)
+  --fs-600: calc(var(--fs-clamp) * 2.5);   // Extra large heading (40px at 16px base)
+  --fs-700: calc(var(--fs-clamp) * 3);     // Huge heading (48px at 16px base)
+  --fs-800: calc(var(--fs-clamp) * 4);     // Super heading (64px at 16px base)
+  --fs-900: calc(var(--fs-clamp) * 5);     // Mega heading (80px at 16px base)
 
-  // Line Hight/Leading
-  $value: 100;
-  @while $value <= 200 {
-    --lh-#{$value}: #{math.div($value, 100)};
-    $value: $value + 5;
-  }
+  // Body text size scale - more nuanced for text content
+  --text-100: calc(var(--fs-clamp) * 0.75);   // Small text (12px at 16px base)
+  --text-200: calc(var(--fs-clamp) * 0.875);  // Small/medium text (14px at 16px base)
+  --text-300: calc(var(--fs-clamp) * 1);      // Base text (16px at 16px base)
+  --text-400: calc(var(--fs-clamp) * 1.125);  // Medium text (18px at 16px base)
+  --text-500: calc(var(--fs-clamp) * 1.25);   // Large text (20px at 16px base)
 
-  // Font Families
-  --primary-ff: #{var.$primary-font-family}, serif;
-  --secondary-ff: #{var.$secondary-font-family}, sans-serif;
-  --tertiary-ff: #{var.$tertiary-font-family}, serif;
-  --quote-ff: #{var.$quote-font-family}, serif;
-  --mono-ff: #{var.$mono-font-family}, monospace;
-
-  --heading-ff: var(--primary-ff);
-  --subheading-ff: var(--secondary-ff);
-  --body-text-ff: var(--tertiary-ff);
-  --detail-ff: var(--secondary-ff);
-
-  // Font Descender
-  --primary-des: #{map.get(map.get(var.$font-data, 'primary'), 'descender')}em;
-  --secondary-des: #{map.get(map.get(var.$font-data, 'secondary'), 'descender')}em;
-  --tertiary-des: #{map.get(map.get(var.$font-data, 'tertiary'), 'descender')}em;
-  --quote-des: #{map.get(map.get(var.$font-data, 'quote'), 'descender')}em;
-  --mono-des: #{map.get(map.get(var.$font-data, 'mono'), 'descender')}em;
-
-  // Font Familes Bold Weight
-  --primary-bold: 700;
-  --secondary-bold: 700;
-  --tertiary-bold: 700;
-  --quote-bold: 700;
-  --mono-bold: 700;
-
-  --heading-bold: var(--primary-bold);
-  --subheading-bold: var(--secondary-bold);
-  --body-text-bold: var(--tertiary-bold);
-  --detail-bold: var(--secondary-bold);
+  // Font families
+  --ff-primary: Arial, Helvetica, sans-serif;              // Primary sans-serif font
+  --ff-secondary: Georgia, "Times New Roman", serif;       // Secondary serif font
+  --ff-mono: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;  // Monospace for code
 }
 
-//* Font Properties
-.text-properties {
-  font-size: var(--font-size);
-  line-height: var(--line-height);
-  font-weight: var(--font-weight);
-  font-style: var(--font-style);
-  letter-spacing: var(--letter-spacing);
-  text-transform: var(--text-transform);
-  text-rendering: geometricPrecision;
+/// @name Base HTML Typography
+/// @description Sets foundational typography styles for the HTML element
+/// to establish a reliable base for all text in the document.
+html {
+  font-family: var(--ff-primary);  // Use the primary font family
+  font-size: 100%;                 // Respect user's browser settings (typically 16px)
+  line-height: 1.2;                // Base line height
+  font-weight: 400;                // Regular font weight
+  text-size-adjust: 100%;          // Prevent mobile browsers from auto-adjusting font size
 }
 
-//*** Line-height to leading system START
-// Mixin for cap-to-baseline trimming
-@mixin trim-cap-to-baseline($font: 'primary', $text-height: 'cap', $block: true) {
-  @if $block {
-    display: block; // Ensures trimming works
-  }
-  @if not index(('cap', 'd'), $text-height) {
-    @error "Invalid $text-height '#{$text-height}'. Must be 'cap' or 'd'.";
-  }
-  $font-data: map.get(var.$font-data, $font);
-  // Set font-specific metrics as custom properties
-  $textHeight: map.get($font-data, $text-height);
-  $ascender: map.get($font-data, 'ascender');
-  $descender: map.get($font-data, 'descender');
-  $emBoxExceed: math.div($ascender + $descender - 1, 2);
-  $ascenderDiff: $ascender - $emBoxExceed - $textHeight;
-  $descenderDiff: $descender - $emBoxExceed;
-  $leftSideBearing: map.get($font-data, 'lsb');
-
-  // Left Side Bearing compensation
-  @if $leftSideBearing != null and $leftSideBearing != 0 {
-    margin-inline-start: -#{$leftSideBearing + 'em'};
-  } @else {
-    margin-inline-start: 0;
-  }
-
-  // Common ::before and ::after elements properties
-  &::before, &::after {
-    content: "";
-    display: table;
-  }
-  // Trim before and after
-  &::before {
-    margin-bottom: calc(((1 - var(--line-height)) * 0.5 - #{$ascenderDiff}) * 1em);
-    @supports (margin-bottom: 1lh) {
-      margin-bottom: calc(((1lh - 1em) * -0.5) - #{$ascenderDiff}em);
-    }
-  }
-  &::after {
-    margin-bottom: calc(((1 - var(--line-height)) * 0.5 - #{$descenderDiff}) * 1em);
-    @supports (margin-bottom: 1lh) {
-      margin-bottom: calc(((1lh - 1em) * -0.5) - #{$descenderDiff}em);
-    }
-  }
-
-  // Modern approach for supporting browsers
-  @supports (text-box-trim: trim-both) and (text-box-edge: cap alphabetic) {
-    text-box-trim: trim-both;
-    @if $text-height == 'cap' {
-      text-box-edge: cap alphabetic; // Top: cap height, Bottom: baseline
-    } @else if $text-height == 'd' {
-      text-box-edge: cap alphabetic; // Top: cap height, Bottom: baseline
-    }
-    &::before, &::after {
-      display: none; // Remove pseudo-elements when modern properties are supported
-    }
-  }
+/// @name Body Typography
+/// @description Applies the fluid font size to the body element, enabling
+/// responsive scaling of text throughout the document.
+body {
+  font-size: var(--fs-clamp);      // Apply fluid font sizing (16px to 20px)
 }
 
-// Font metric classes with trimming
-.primary-text {
-  font-family: var(--primary-ff);
-  @include trim-cap-to-baseline('primary');
+/// Reset heading elements to a neutral state
+/// This allows more flexible styling using utility classes
+h1, h2, h3, h4, h5, h6, p, a, {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
 }
 
-.secondary-text {
-  font-family: var(--secondary-ff);
-  @include trim-cap-to-baseline('secondary');
+/// Display Text
+/// ------------
+/// Extra large text styles for hero sections, banners, and feature callouts
+
+/// @desc Largest display text for hero headings
+.display-xxl {
+  font-size: var(--fs-900); /// 80px at 16px base
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
-.tertiary-text {
-  font-family: var(--tertiary-ff);
-  @include trim-cap-to-baseline('tertiary');
+/// @desc Very large display text for major page sections
+.display-xl {
+  font-size: var(--fs-800); /// 64px at 16px base
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
-.quote-text {
-  font-family: var(--quote-ff);
-  @include trim-cap-to-baseline('quote');
+/// @desc Large display text for section headers
+.display-lg {
+  font-size: calc(var(--fs-clamp) * 3.5); /// 56px at 16px base
+  line-height: 1.1;
+  letter-spacing: -0.015em;
 }
 
-.mono-text {
-  font-family: var(--mono-ff);
-  @include trim-cap-to-baseline('mono');
-}
-//*** Line-height to leading system END
+/// Heading Styles
+/// -------------
+/// Consistent heading classes that can be applied to any element
 
-// Font Sizes Utility classes
-.fs-100 {font-size: var(--fs-100) !important;}
-.fs-200 {font-size: var(--fs-200) !important;}
-.fs-300 {font-size: var(--fs-300) !important;}
-.fs-400 {font-size: var(--fs-400) !important;}
-.fs-500 {font-size: var(--fs-500) !important;}
-.fs-600 {font-size: var(--fs-600) !important;}
-.fs-700 {font-size: var(--fs-700) !important;}
-.fs-800 {font-size: var(--fs-800) !important;}
-.fs-900 {font-size: var(--fs-900) !important;}
-
-// Margins
-[class^="heading-"] + *, [class^="display-"] + * {
-  margin-block-start: 1.5rem;
+/// @desc Extra large heading, typically for page titles
+.heading-xl {
+  font-size: var(--fs-700); /// 48px at 16px base
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
-[class^="heading-"] + [class^="heading-"] {
-  margin-block-start: 1.5em;
+/// @desc Large heading for major section headings
+.heading-lg {
+  font-size: var(--fs-600); /// 40px at 16px base
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
-p[class^="heading-"] + p[class^="heading-"] {
-  margin-block-start: 1.5rem;
+/// @desc Medium heading for standard section headings
+.heading-md {
+  font-size: var(--fs-500); /// 32px at 16px base
+  line-height: 1.25;
 }
 
-[class^="heading-"] + [class^="text-"] {
-  margin-block-start: calc(var(--primary-des) * 1.5);
+/// @desc Small heading for subsections
+.heading-sm {
+  font-size: var(--fs-400); /// 24px at 16px base
+  line-height: 1.3;
 }
 
-// Semantic Font Sizes
-.display {
-  &-1 {
-    @include mx.f-setup (
-      $font: 'primary',
-      $font-size: var(--fs-900),
-      $line-height: 1.1,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-  &-2 {
-    @include mx.f-setup (
-      $font: 'primary',
-      $font-size: var(--fs-800),
-      $line-height: 1.1,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
+/// @desc Extra small heading for minor subsections or component headings
+.heading-xs {
+  font-size: var(--text-500); /// 20px at 16px base
+  line-height: 1.4;
 }
 
-.heading {
-  &-1 {
-    @include mx.f-setup (
-      $font: 'primary',
-      $font-size: var(--fs-700),
-      $line-height: 1.1,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-  &-2 {
-    @include mx.f-setup (
-      $font: 'primary',
-      $font-size: var(--fs-600),
-      $line-height: 1.15,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-  &-3 {
-    @include mx.f-setup (
-      $font: 'primary',
-      $font-size: var(--fs-500),
-      $line-height: 1.2,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-  &-4 {
-    @include mx.f-setup (
-      $font: 'primary',
-      $font-size: var(--fs-400),
-      $line-height: 1.25,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
+/// Body Text Styles
+/// ---------------
+/// Classes for body text in various sizes
 
-  &--bold {
-    --font-weight: var(--primary-bold);
-  }
+/// @desc Extra large body text for lead paragraphs
+.text-xl {
+  font-size: var(--text-500); /// 20px at 16px base
+  line-height: 1.5;
 }
 
-.text {
-  &-large {
-    @include mx.f-setup (
-      $font: 'tertiary',
-      $font-size: var(--text-500),
-      $line-height: 1.4,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-  &-medium {
-    @include mx.f-setup (
-      $font: 'tertiary',
-      $font-size: var(--text-400),
-      $line-height: 1.45,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-  &-normal, &-default {
-    @include mx.f-setup (
-      $font: 'tertiary',
-      $font-size: var(--text-300),
-      $line-height: 1.5,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-  &-small {
-    @include mx.f-setup (
-      $font: 'tertiary',
-      $font-size: var(--text-200),
-      $line-height: 1.55,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-  &-tiny {
-    @include mx.f-setup (
-      $font: 'tertiary',
-      $font-size: var(--text-100),
-      $line-height: 1.6,
-      $font-weight: 400,
-      $font-style: normal,
-      $letter-spacing: normal,
-      $text-transform: none,
-    );
-  }
-
-  &--bold {
-    --font-weight: var(--terriary-bold);
-  }
+/// @desc Large body text
+.text-lg {
+  font-size: var(--text-400); /// 18px at 16px base
+  line-height: 1.5;
 }
 
-.title-box {
-  display: block;
-  width: 100%;
-  margin-inline: 0 auto;
-
-  &--right > * {
-    margin-inline: auto 0;
-  }
-
-  &--center > * {
-    margin-inline: auto;
-  }
-
-  &--large {
-    font-size: var(--fs-700);
-  }
-  &--medium {
-    font-size: var(--fs-600);
-  }
-  &--small {
-    font-size: var(--fs-500);
-  }
-
-  &__title {
-    @include mx.f-setup (
-      $font: 'primary',
-      $font-size: 1em,
-      $line-height: 1.1
-    );
-
-    &--bold {
-      --font-weight: var(--primary-bold);
-    }
-  }
-
-  &__subtitle {
-    @include mx.f-setup (
-      $font: 'secondary',
-      $font-size: calc(1em / var(--phi)),
-      $line-height: 1.2
-    );
-    margin-block-start: 0.5em;
-
-    &--bold {
-      --font-weight: var(--secondary-bold);
-    }
-  }
-
-  & + p, & + .text-box {
-    margin-block-start: 1.5em;
-  }
-
-  @supports selector(:has(*)) {
-    & + p, & + .text-box {
-      margin-block-start: unset;
-    }
-    &:has( + p), &:has( + .text-box) {
-      margin-block-end: 1.5rem;
-    }
-  }
-
-  
+/// @desc Medium body text (default size)
+.text-md {
+  font-size: var(--text-300); /// 16px at 16px base
+  line-height: 1.5;
 }
 
-.text-box {
-  width: min(100%, 70ch);
-
-  p {
-    margin-block-end: unset;
-  }
-
-  p + p {
-    margin-block-start: min(1.5em, 1.5 * var(--text-500));
-  }
+/// @desc Small body text for secondary content
+.text-sm {
+  font-size: var(--text-200); /// 14px at 16px base
+  line-height: 1.6;
 }
 
+/// @desc Extra small body text for captions and fine print
+.text-xs {
+  font-size: var(--text-100); /// 12px at 16px base
+  line-height: 1.6;
+}
+
+/// Special Text Styles
+/// -----------------
+/// Additional text style variations and utilities
+
+/// @desc Larger introductory paragraph with distinctive styling
 .lead-in {
-  @include mx.f-setup (
-    $font: 'tertiary',
-    $font-size: var(--text-400),
-    $line-height: 1.6em,
-    $font-weight: var(--tertiary-bold),
-    $font-style: normal,
-    $letter-spacing: normal,
-    $text-transform: none,
-  );
+  font-size: var(--text-500);
+  line-height: 1.6;
+  font-weight: 300;
+  color: var(--color-text-secondary, #555);
+  margin-bottom: calc(var(--fs-clamp) * 1.5);
+}
+
+/// @desc Caption text for images, tables, etc.
+.caption {
+  font-size: var(--text-200);
+  line-height: 1.4;
+  color: var(--color-text-secondary, #555);
+  margin-top: calc(var(--fs-clamp) * 0.5);
+}
+
+/// @desc Text for quotes or testimonials
+.quote {
+  font-size: var(--text-500);
+  line-height: 1.6;
+  font-style: italic;
+  margin: var(--fs-400) 0;
+  padding-left: var(--text-300);
+  border-left: 3px solid var(--color-primary, #3a86ff);
+}
+
+/// Composite Typography Components
+/// ----------------------------
+/// Complex typography components with internal proportional scaling
+
+/// @desc Title group component with pre-title, title, and subtitle elements
+/// that maintain proportional relationships regardless of overall size
+/// @example html
+///   <heading-group class="title-group-lg">
+///     <span class="pre-title">Phasellus vitae porta sapien</span>
+///     <h1 class="title">Lorem ipsum dolor</h1>
+///     <p class="subtitle">Ut nisl sem, consectetur a nisi quis, rhoncus tristique ex.</p>
+///   </heading-group>
+.title-group {
+  &-xl {
+    @extend .title-group;
+    font-size: var(--fs-700); /// Extra large title group
+  }
+
+  &-lg {
+    @extend .title-group;
+    font-size: var(--fs-600); /// Large title group
+  }
+
+  &-md {
+    @extend .title-group;
+    font-size: var(--fs-500); /// Medium title group
+  }
+
+  .pre-title {
+    font-size: max(0.375em, var(--fs-100); /// Proportionally scaled pre-title
+    margin-block-end: 1em;
+  }
+
+  .title {
+    font-size: 1em; /// Base size for the title element
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 0.5em; /// Proportionally scaled subtitle
+    line-height: 1.3;
+    margin-block-start: 0.5em;
+  }
 }

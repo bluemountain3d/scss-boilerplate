@@ -1,7 +1,11 @@
-//*** Abstracts Mixin: Name ***//
+/// @group Abstracts/Mixins
+/// @name <Mixin Name>
+/// @description
+/// 
+/// =======================
 
-@use '../variables' as var;
-@use '../functions' as fn;
+@use '../variables/__index__' as var;
+@use '../functions/__index__' as fn;
 
 // Example
 @mixin mixin-name($myVar: "Default Value") {

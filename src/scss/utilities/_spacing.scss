@@ -1,45 +1,61 @@
-//*** Utilities Spacing ***//
-/** 
- * Description of the module's purpose
- */
+/// Utilities Spacing
+/// =================
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+/// @description A comprehensive spacing system with fluid scaling based on typography.
+/// Provides consistent spacing variables that adapt to screen size.
 
-@use 'sass:math';
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
+
+/// @name Spacing Variables
+/// @description Defines a set of spacing variables that scale proportionally with font size.
+/// All spacing values are calculated as multiples of the fluid font size (--fs-clamp),
+/// ensuring consistent proportions across all screen sizes.
+/// 
+/// Naming convention: --gap-[size]
+/// - The number represents the scale (050 = smallest, 950 = largest)
+/// - Values shown in comments are based on a 16px font size
+/// 
+/// @example scss
+///   .card {
+///     padding: var(--gap-200);        // Base padding
+///     margin-bottom: var(--gap-400);  // Large bottom spacing
+///   }
+///   
+///   .grid {
+///     display: grid;
+///     gap: var(--gap-300);            // Medium spacing between grid items
+///   }
+/// @end
 
 :root {
-  // Gap Sizes
-  @include mx.fluid-spacing-var(
-    $prefix: 'gap', 
-    $vwx: true, 
-    $method: 'clamp'
-  );
-
-  // Section Vertical spacing
-  @include mx.fluid-spacing-var(
-    $prefix: 'gap', 
-    $vwx: true, 
-    $method: 'clamp',
-    $custom-weights: ('section': 4),
-    $size-multiplier: 3
-  );
+  // Extra small spacing
+  --gap-050: calc(var(--fs-clamp) * 0.25); // 4px at 16px base
+  --gap-100: calc(var(--fs-clamp) * 0.5);  // 8px at 16px base
+  --gap-150: calc(var(--fs-clamp) * 0.75); // 12px at 16px base
+  
+  // Base and medium spacing
+  --gap-200: calc(var(--fs-clamp) * 1);    // 16px at 16px base
+  --gap-250: calc(var(--fs-clamp) * 1.25); // 20px at 16px base
+  --gap-300: calc(var(--fs-clamp) * 1.5);  // 24px at 16px base
+  --gap-350: calc(var(--fs-clamp) * 1.75); // 28px at 16px base
+  
+  // Large spacing
+  --gap-400: calc(var(--fs-clamp) * 2);    // 32px at 16px base
+  --gap-450: calc(var(--fs-clamp) * 2.25); // 36px at 16px base
+  --gap-500: calc(var(--fs-clamp) * 2.5);  // 40px at 16px base
+  --gap-550: calc(var(--fs-clamp) * 2.75); // 44px at 16px base
+  
+  // Extra large spacing
+  --gap-600: calc(var(--fs-clamp) * 3);    // 48px at 16px base
+  --gap-650: calc(var(--fs-clamp) * 3.5);  // 56px at 16px base
+  --gap-700: calc(var(--fs-clamp) * 4);    // 64px at 16px base
+  --gap-750: calc(var(--fs-clamp) * 4.5);  // 72px at 16px base
+  
+  // Huge spacing (for sections, major layout elements)
+  --gap-800: calc(var(--fs-clamp) * 5);    // 80px at 16px base
+  --gap-850: calc(var(--fs-clamp) * 5.5);  // 88px at 16px base
+  --gap-900: calc(var(--fs-clamp) * 6);    // 96px at 16px base
+  --gap-950: calc(var(--fs-clamp) * 6.5);  // 104px at 16px base
 }
-
-// $_spacing-weights: (025, 050, 075,100, 150, 200, 250, 300, 350, 400, 450, 500);
-// @include mx.fluid-spacing-util($prefix: 'margin', $property: 'margin', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'margin-x', $property: 'margin-inline', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'margin-x-start', $property: 'margin-inline-start', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'margin-x-end', $property: 'margin-inline-end', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'margin-y', $property: 'margin-block', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'margin-y-start', $property: 'margin-block-start', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'margin-y-end', $property: 'margin-block-end', $include-weights: $_spacing-weights);
-
-// @include mx.fluid-spacing-util($prefix: 'padding', $property: 'padding', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'padding-x', $property: 'padding-inline', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'padding-x-start', $property: 'padding-inline-start', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'padding-x-end', $property: 'padding-inline-end', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'padding-y', $property: 'padding-block', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'padding-y-start', $property: 'padding-block-start', $include-weights: $_spacing-weights);
-// @include mx.fluid-spacing-util($prefix: 'padding-y-end', $property: 'padding-block-end', $include-weights: $_spacing-weights);

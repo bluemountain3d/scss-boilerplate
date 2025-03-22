@@ -1,6 +1,10 @@
-//*** Abstracts Function: Name ***//
+/// @group Abstracts/Functiona
+/// @name <Function Name>
+/// @description
+/// 
+/// ==========================
 
-@use '../variables' as var;
+@use '../variables/__index__' as var;
 
 // Example
 @function my-function($myVar: "Default Value") {

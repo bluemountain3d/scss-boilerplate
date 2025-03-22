@@ -1,10 +1,15 @@
-//*** Abstracts Function: Strip Unit ***//
+/// @group Abstracts/Functions
+/// @name Strip Unit
+/// @description
+/// 
+/// =======================
 
-@use '../variables' as var;
+@use '../variables/__index__' as var;
 
 @use 'sass:math';
 
-/// Removes units from a number if present
+/// @name strip-unit
+/// @description Removes units from a number if present
 /// @param {number} $value - Number with optional unit
 /// @return {number} Number without unit
 /// # strip-unit(16px) => 16

@@ -1,11 +1,11 @@
-//*** [FOLDER]: <MODULE NAME> ***//
-/** 
- * Description of the module's purpose
- */
+/// [FOLDER]: <MODULE NAME>
+/// =======================
+ 
+/// Description of the module's purpose
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/functions' as fn;
-@use '../abstracts/mixins' as mx;
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
 
 @use 'sass:color';
 @use 'sass:list';

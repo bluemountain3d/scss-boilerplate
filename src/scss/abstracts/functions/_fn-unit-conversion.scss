@@ -1,15 +1,58 @@
-//*** Abstracts Function: Px to Rem and reverse ***//
+/// @group Abstracts/Functions
+/// @name Unit conversion
+/// @description
+/// 
+/// ==========================
 
-@use '../variables' as var;
+/// Unit Conversion Functions
+/// =========================
+/// 
+/// A collection of utility functions for converting between different CSS units.
+/// These functions make it easy to maintain consistent measurements across
+/// different contexts (screen, print) and unit systems.
+/// 
+/// ## Table of Contents
+/// 
+/// 1. px-to-rem($px, $base: 16, $unitless: false)
+///    Convert pixels to rem units
+/// 
+/// 2. rem-to-px($rem, $base: 16, $unitless: false)
+///    Convert rem units to pixels
+/// 
+/// 3. px-to-pt($px, $unitless: false)
+///    Convert pixels to points
+/// 
+/// 4. pt-to-px($pt, $unitless: false)
+///    Convert points to pixels
+/// 
+/// 5. rem-to-pt($rem, $base: 16, $unitless: false)
+///    Convert rem units to points
+/// 
+/// 6. pt-to-rem($pt, $base: 16, $unitless: false)
+///    Convert points to rem units
+
+@use '../variables/__index__' as var;
 
 @use 'sass:math';
 
-
+/// 1.
 /// Converts pixel value to rem value
-/// @param {number} $px - Value in pixels to convert
-/// @param {number} $base [16] - Base font size in pixels
-/// @param {boolean} $unitless [false] - Whether to return a unitless number
-/// @return {number} Value in rem units (or unitless if specified)
+/// ---------------------------------
+/// Transforms pixel-based measurements to relative rem units for scalable, 
+/// accessible designs that respect user font-size preferences.
+/// 
+/// @param {Number} $px - Value in pixels to convert
+/// @param {Number} $base [16] - Base font size in pixels
+/// @param {Boolean} $unitless [false] - Whether to return a unitless number
+/// 
+/// @returns {Number} Value in rem units (or unitless if specified)
+/// 
+/// @example
+///   px-to-rem(32) => 2rem
+///   px-to-rem(32, 8) => 4rem
+///   px-to-rem(32, 16, true) => 2
+///   font-size: px-to-rem(24); => font-size: 1.5rem;
+
 @function px-to-rem(
   $px,
   $base: 16,
@@ -19,11 +62,24 @@
   @return if($unitless, $result, $result * 1rem);
 }
 
+/// 2.
 /// Converts rem value to pixel value
-/// @param {number} $rem - Value in rem to convert
-/// @param {number} $base [16] - Base font size in pixels
-/// @param {boolean} $unitless [false] - Whether to return a unitless number
-/// @return {number} Value in pixels (or unitless if specified)
+/// ---------------------------------
+/// Transforms relative rem units to absolute pixels, useful for calculating
+/// exact dimensions or when integrating with pixel-based systems.
+/// 
+/// @param {Number} $rem - Value in rem to convert
+/// @param {Number} $base [16] - Base font size in pixels
+/// @param {Boolean} $unitless [false] - Whether to return a unitless number
+/// 
+/// @returns {Number} Value in pixels (or unitless if specified)
+/// 
+/// @example
+///   rem-to-px(2) => 32px
+///   rem-to-px(2, 8) => 16px
+///   rem-to-px(1.5, 16, true) => 24
+///   height: rem-to-px(3.75); => height: 60px;
+
 @function rem-to-px(
   $rem,
   $base: 16,
@@ -33,11 +89,24 @@
   @return if($unitless, $result, $result * 1px);
 }
 
-
+/// 3.
 /// Converts pixel value to point value
-/// @param {number} $px - Value in pixels to convert
-/// @param {boolean} $unitless [false] - Whether to return a unitless number
-/// @return {number} Value in points (or unitless if specified)
+/// ----------------------------------
+/// Transforms pixel units to points (pt), primarily useful for print-focused 
+/// stylesheets where point measurements are standard.
+/// 
+/// @param {Number} $px - Value in pixels to convert
+/// @param {Boolean} $unitless [false] - Whether to return a unitless number
+/// 
+/// @returns {Number} Value in points (or unitless if specified)
+/// 
+/// @example
+///   px-to-pt(20) => 15pt
+///   px-to-pt(40, true) => 30
+///   font-size: px-to-pt(16); => font-size: 12pt;
+///
+/// Note: Uses the standard conversion ratio of 1pt = 1.333333px (72pt/inch ÷ 96px/inch)
+
 @function px-to-pt(
   $px,
   $unitless: false
@@ -47,10 +116,24 @@
   @return if($unitless, $result, $result * 1pt);
 }
 
+/// 4.
 /// Converts point value to pixel value
-/// @param {number} $pt - Value in points to convert
-/// @param {boolean} $unitless [false] - Whether to return a unitless number
-/// @return {number} Value in pixels (or unitless if specified)
+/// ----------------------------------
+/// Transforms point units to pixels, useful when converting print-focused 
+/// designs for screen display.
+/// 
+/// @param {Number} $pt - Value in points to convert
+/// @param {Boolean} $unitless [false] - Whether to return a unitless number
+/// 
+/// @returns {Number} Value in pixels (or unitless if specified)
+/// 
+/// @example
+///   pt-to-px(12) => 16px
+///   pt-to-px(9, true) => 12
+///   width: pt-to-px(24); => width: 32px;
+///
+/// Note: Uses the standard conversion ratio of 1px = 0.75pt (96px/inch ÷ 72pt/inch)
+
 @function pt-to-px(
   $pt,
   $unitless: false
@@ -60,12 +143,24 @@
   @return if($unitless, $result, $result * 1px);
 }
 
-
+/// 5.
 /// Converts rem value to point value
-/// @param {number} $rem - Value in rem to convert
-/// @param {number} $base [16] - Base font size in pixels
-/// @param {boolean} $unitless [false] - Whether to return a unitless number
-/// @return {number} Value in points (or unitless if specified)
+/// --------------------------------
+/// Transforms relative rem units to absolute point units, useful for creating
+/// print stylesheets that maintain proportions from screen designs.
+/// 
+/// @param {Number} $rem - Value in rem to convert
+/// @param {Number} $base [16] - Base font size in pixels
+/// @param {Boolean} $unitless [false] - Whether to return a unitless number
+/// 
+/// @returns {Number} Value in points (or unitless if specified)
+/// 
+/// @example
+///   rem-to-pt(1.5) => 18pt
+///   rem-to-pt(2, 10) => 15pt
+///   rem-to-pt(4, 16, true) => 48
+///   font-size: rem-to-pt(1); => font-size: 12pt;
+
 @function rem-to-pt(
   $rem,
   $base: 16,
@@ -77,11 +172,24 @@
   @return if($unitless, $result, $result * 1pt);
 }
 
+/// 6.
 /// Converts point value to rem value
-/// @param {number} $pt - Value in points to convert
-/// @param {number} $base [16] - Base font size in pixels
-/// @param {boolean} $unitless [false] - Whether to return a unitless number
-/// @return {number} Value in rem (or unitless if specified)
+/// --------------------------------
+/// Transforms absolute point units to relative rem units, useful when adapting
+/// print-focused designs for responsive web layouts.
+/// 
+/// @param {Number} $pt - Value in points to convert
+/// @param {Number} $base [16] - Base font size in pixels
+/// @param {Boolean} $unitless [false] - Whether to return a unitless number
+/// 
+/// @returns {Number} Value in rem (or unitless if specified)
+/// 
+/// @example
+///   pt-to-rem(24) => 2rem
+///   pt-to-rem(15, 10) => 2rem
+///   pt-to-rem(18, 16, true) => 1.5
+///   margin: pt-to-rem(12); => margin: 1rem;
+
 @function pt-to-rem(
   $pt,
   $base: 16,

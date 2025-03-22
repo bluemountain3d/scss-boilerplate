@@ -1,23 +1,69 @@
-//*** Styles index ***//
+// =========================================================
+// MAIN SCSS FILE
+// =========================================================
+// This is the main file that imports all other scss files
+// The order is crucial for proper cascade and to avoid
+// unexpected overrides.
+// =========================================================
 @charset 'utf-8';
 
-// Vendors
-@forward './vendors';
+// ----------------------------------
+// 1. VENDORS
+// ----------------------------------
+// External libraries, reset, and third-party components
+// Placed first so our own styles can override them
+@forward 'vendors/__index__';
 
-// Utilities
-@forward './utilities';
+// ----------------------------------
+// 2. ABSTRACTS & UTILITIES
+// ----------------------------------
+// Fundamental building blocks with no CSS output
+// (variables, functions, mixins)
 
-// Theme
-@forward './theme';
+// Design tokens and variables
+@forward 'abstracts/variables/__index__';
 
-// Base
-@forward './base';
+// Functions for calculations and data manipulation
+@forward 'abstracts/functions/__index__';
 
-// Components
-@forward './components';
+// Mixins for reusable style patterns
+@forward 'abstracts/mixins/__index__';
 
-// Layouts
-@forward './layouts';
+// Utility classes and helpers
+@forward 'utilities/__index__';
 
-// Pages
-@forward './pages';
+// ----------------------------------
+// 3. THEMES
+// ----------------------------------
+// Global theme variations, color schemes, and typography
+@forward 'themes/__index__';
+
+// ----------------------------------
+// 4. BASE
+// ----------------------------------
+// Basic element styles and typography
+// Targets HTML elements directly without classes
+@forward 'base/__index__';
+
+// ----------------------------------
+// 5. COMPONENTS & LAYOUT
+// ----------------------------------
+// Reusable UI components
+@forward 'components/__index__';
+
+// Layout components that arrange content
+@forward 'layout/__index__';
+
+// ----------------------------------
+// 6. PAGES
+// ----------------------------------
+// Page-specific styles and overrides
+// Placed last to be able to override previous styles
+@forward 'pages/__index__';
+
+// ----------------------------------
+// 7. SHAME
+// ----------------------------------
+// Temporary fixes and hacks that need refactoring
+// Comment out in production if empty
+// @forward 'shame';

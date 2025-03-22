@@ -1,0 +1,40 @@
+/// @group Abstracts/Functions
+/// @name Hex to RGB
+/// @description
+/// 
+/// =======================
+
+@use '../variables/__index__' as var;
+@use 'sass:color';
+@use 'sass:meta';
+
+/// Converts a hex color to an RGB string
+/// -------------------------------------
+/// Transforms a hex color value (#fff or #ffffff) into a comma-separated RGB string
+/// suitable for use in rgb() or rgba() color functions. Handles both modern and
+/// legacy Sass implementations using feature detection.
+/// 
+/// @param {Color} $hex - The hex color to convert
+/// 
+/// @returns {String} RGB values as a comma-separated string (e.g., "255, 255, 255")
+/// 
+/// @example
+///   hexToRgb(#ff0000) => "255, 0, 0"
+///   hexToRgb(#00ff00) => "0, 255, 0"
+///   background-color: rgba(#{hexToRgb(#0000ff)}, 0.5) => rgba(0, 0, 255, 0.5)
+/// 
+/// Note: Returns a string rather than a list to facilitate direct use in the
+/// rgb/rgba functions. Compatible with both newer and older Sass versions.
+
+@function hexToRgb($hex) {
+  @if meta.function-exists("red", "color") {
+    // Older method
+    @return "#{red($hex)}, #{green($hex)}, #{blue($hex)}";
+  } @else {
+    // Newer method
+    $r: color.channel($hex, "red");
+    $g: color.channel($hex, "green");
+    $b: color.channel($hex, "blue");
+    @return "#{$r}, #{$g}, #{$b}";
+  }
+}

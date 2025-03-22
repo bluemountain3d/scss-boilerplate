@@ -3,3 +3,4 @@ src/css/
 package.json
 pnpm-lock.yaml
 *.html
+settings.json

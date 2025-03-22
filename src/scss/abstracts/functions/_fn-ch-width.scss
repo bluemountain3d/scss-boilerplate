@@ -1,9 +1,0 @@
-//*** Abstracts Function: ch-width ***//
-
-@use '../variables' as var;
-
-@function ch-width($font, $characters) {
-  $ch-ratio: map.get(map.get(var.$font-data, $font), 'ch');
-  @return ($characters / $ch-ratio) * 1ch;
-}
-// Usage: max-width: fn.ch-width('primary', 70);

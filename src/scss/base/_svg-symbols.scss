@@ -1,0 +1,103 @@
+/// Base: svg-symbols
+/// =================
+
+@use '../abstracts/variables/__index__' as var;
+@use '../abstracts/functions/__index__' as fn;
+@use '../abstracts/mixins/__index__' as mx;
+
+/// SVG Symbol System
+/// ================
+///
+/// A system for efficiently using and reusing SVG icons throughout your project.
+/// This approach bundles all icons into a single SVG container that's hidden on the page,
+/// allowing icons to be referenced without additional HTTP requests.
+/// 
+///
+/// @example html - Step 1: Add the symbol container to your HTML (once per page)
+///   <svg class="svg-symbols" role="none" xmlns="http://www.w3.org/2000/svg">
+///     <!-- Email Icon -->
+///     <symbol id="email-icon" viewBox="0 0 100 100">
+///       <path d="M50.1041 66.1426L64.428 51.8205L86.21 73.602H57.5635H42.6448H14L35.7814 51.8205L50.1041 66.1426Z"/>
+///     </symbol>
+///   
+///     <!-- Add more symbols as needed -->
+///   </svg>
+///
+/// @example html - Step 2: Use symbols anywhere in your HTML
+///   <svg class="icon" aria-hidden="true">
+///     <use href="#email-icon"></use>
+///   </svg>
+///
+/// @example scss - Step 3: Style your icons with CSS
+///   .icon {
+///     width: 24px;
+///     height: 24px;
+///     fill: currentColor; // Inherits color from parent
+///   }
+/// @end
+
+/// The container that holds all symbol definitions
+/// IMPORTANT: Place this at the beginning of the body tag for best browser compatibility
+/// and to ensure symbols are available before they're referenced on the page.
+.svg-symbols {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+/// Base icon class for consistent styling
+/// @example html
+///   <svg class="icon">
+///     <use href="#icon-id"></use>
+///   </svg>
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: middle;
+  
+  // Variants for different sizes
+  &--sm {
+    width: 0.75em;
+    height: 0.75em;
+  }
+  
+  &--lg {
+    width: 1.5em;
+    height: 1.5em;
+  }
+  
+  &--xl {
+    width: 2em;
+    height: 2em;
+  }
+}
+
+/// Utility class to flip icons horizontally
+.icon-flip-h {
+  transform: scaleX(-1);
+}
+
+/// Utility class to flip icons vertically
+.icon-flip-v {
+  transform: scaleY(-1);
+}
+
+/// Animation for spinning icons (like loading indicators)
+.icon-spin {
+  animation: icon-spin 2s infinite linear;
+}
+
+@keyframes icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
