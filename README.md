@@ -8,13 +8,13 @@ scss/
 ├── TEMPLATE/                    # Module templates
 │   └── __MODULE-TEMPLATE__.scss
 ├── abstracts/                   # Tools and helpers
-│   ├── functions/              # SCSS functions
+│   ├── functions/               # SCSS functions
 │   │   ├── _fn-[name].scss
 │   │   └── _index.scss
-│   ├── mixins/                 # SCSS mixins
+│   ├── mixins/                  # SCSS mixins
 │   │   ├── _mx-[name].scss
 │   │   └── _index.scss
-│   └── variables/              # SCSS variables
+│   └── variables/               # SCSS variables
 │       ├── _var-[name].scss
 │       └── _index.scss
 ├── vendors/                     # Third party styles
@@ -22,15 +22,15 @@ scss/
 │   └── _index.scss
 ├── utilities/                   # Utility classes
 │   ├── _reset.scss
-│   ├── _math-viewport.scss     # Math constants and viewport units
-│   ├── _a11y-helpers.scss      # Accessibility helpers
-│   ├── _spacing.scss           # Spacing properties and utilities
-│   ├── _grid.scss             # Grid system
+│   ├── _math-viewport.scss      # Math constants and viewport units
+│   ├── _a11y-helpers.scss       # Accessibility helpers
+│   ├── _spacing.scss            # Spacing properties and utilities
+│   ├── _grid.scss               # Grid system
 │   └── _index.scss
 ├── themes/                      # Theme-specific styles
-│   ├── _font-faces.scss        # Custom font declarations
-│   ├── _colors.scss           # Color custom properties
-│   ├── _typography.scss       # Typography custom properties
+│   ├── _font-faces.scss         # Custom font declarations
+│   ├── _colors.scss             # Color custom properties
+│   ├── _typography.scss         # Typography custom properties
 │   └── _index.scss
 ├── base/                        # Base element styles
 │   ├── _html.scss
