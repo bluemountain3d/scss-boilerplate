@@ -1,0 +1,31 @@
+//*** Abstracts Function: To Fixed ***//
+
+@use '../variables' as var;
+@use 'sass:math';
+
+/**
+ * Formats a number to a specified number of decimal places
+ * -------------------------------------------------------
+ * Provides precise decimal rounding in SASS calculations, similar to JavaScript's toFixed()
+ * but returns a number rather than a string. This ensures consistent presentation of
+ * calculated values throughout the stylesheet.
+ * 
+ * @param {Number} $number - The number to format
+ * @param {Integer} $decimals - Number of decimal places (default: 2)
+ * 
+ * @returns {Number} The formatted number with exact decimal precision
+ * 
+ * @example
+ *   toFixed(3.14159, 2) => 3.14
+ *   toFixed(100.5, 0) => 100
+ *   toFixed(0.045, 1) => 0
+ *   toFixed(0.045, 2) => 0.05
+ * 
+ * Note: Unlike JavaScript's toFixed(), this function does not pad with zeros
+ * if fewer decimal places are needed than specified, and returns a number instead
+ * of a string for use in further calculations.
+ */
+@function toFixed($number, $decimals: 2) {
+  $multiplier: math.pow(10, $decimals);
+  @return math.div(math.round($number * $multiplier), $multiplier);
+}
