@@ -1,0 +1,51 @@
+//*** Abstracts Function: Percent To Em ***//
+
+@use '../variables' as var;
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+
+/**
+ * Converts percentage values to em units
+ * -------------------------------------
+ * Transforms percentage values into equivalent em units for more consistent
+ * typography scaling. This is particularly useful when working with font-relative
+ * measurements derived from percentage-based design systems.
+ * 
+ * @param {Number|String} $percentage - The percentage value to convert (e.g., 125 or "125%" or "-2.2%")
+ * @param {Boolean} $round - Whether to round the result (default: true)
+ * @param {Number} $decimals - Number of decimal places if rounding (default: 3)
+ * 
+ * @returns {Number} The equivalent value in em units
+ * 
+ * @example
+ *   percentToEm(100) => 1em
+ *   percentToEm(125) => 1.25em
+ *   percentToEm(87.5) => 0.875em
+ *   percentToEm("56.23%") => 0.562em
+ *   percentToEm("-2.2%") => -0.022em
+ *   percentToEm(150, false) => 1.5em
+ *   percentToEm(133.33, true, 2) => 1.33em
+ * 
+ * Note: This function adds the 'em' unit to the result, making it ready
+ * for direct use in CSS property values. Works with both positive and negative values.
+ */
+@function percentToEm($percentage, $round: true, $decimals: 3) {
+  // Strip percentage unit (%) if present
+  @if meta.type-of($percentage) == 'string' and string.slice($percentage, -1) == '%'{
+    // Remove the % symbol and convert to number
+    $percentage: string.slice($percentage, 1, -2);
+    
+    // Handle numeric conversion - necessary for negative strings
+    $percentage: math.div($percentage, 1);
+  }
+
+  $emValue: math.div($percentage, 100);
+  
+  @if $round {
+    $multiplier: math.pow(10, $decimals);
+    $emValue: math.div(math.round($emValue * $multiplier), $multiplier);
+  }
+  
+  @return #{$emValue}em;
+}
