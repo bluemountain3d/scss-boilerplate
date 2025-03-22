@@ -1,14 +1,13 @@
 //*** Utilities Spacing ***//
+/** 
+ * Description of the module's purpose
+ */
 
 @use '../abstracts/variables' as var;
 @use '../abstracts/functions' as fn;
 @use '../abstracts/mixins' as mx;
 
 @use 'sass:math';
-
-$_module-name: 'Spacing custom properties & utility classes';
-
-/* ### #{$_module-name} START */
 
 :root {
   // Gap Sizes
@@ -44,7 +43,3 @@ $_module-name: 'Spacing custom properties & utility classes';
 // @include mx.fluid-spacing-util($prefix: 'padding-y', $property: 'padding-block', $include-weights: $_spacing-weights);
 // @include mx.fluid-spacing-util($prefix: 'padding-y-start', $property: 'padding-block-start', $include-weights: $_spacing-weights);
 // @include mx.fluid-spacing-util($prefix: 'padding-y-end', $property: 'padding-block-end', $include-weights: $_spacing-weights);
-
-
-/* ### #{$_module-name} END
-/* ------------------------------------------------------------ */
