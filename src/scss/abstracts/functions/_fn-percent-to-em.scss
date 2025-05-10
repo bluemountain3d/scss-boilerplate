@@ -5,10 +5,10 @@
 /// =======================
 
 @use '../variables/__index__' as var;
+
 @use 'sass:math';
 @use 'sass:meta';
 @use 'sass:string';
-
 
 /// Converts percentage values to em units
 /// -------------------------------------
@@ -33,7 +33,7 @@
 /// 
 /// Note: This function adds the 'em' unit to the result, making it ready
 /// for direct use in CSS property values. Works with both positive and negative values.
- 
+
 @function percentToEm($percentage, $round: true, $decimals: 3) {
   // Strip percentage unit (%) if present
   @if meta.type-of($percentage) == 'string' and string.slice($percentage, -1) == '%'{
