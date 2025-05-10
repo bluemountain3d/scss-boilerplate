@@ -1,28 +1,29 @@
-/// CSS Reset
-/// =========
+/// @group Utilities
+/// @name CSS Reset
+/// ================
 
-/// @description A modern CSS reset that removes browser inconsistencies and
+/// A modern CSS reset that removes browser inconsistencies and
 /// establishes a clean foundation for styling. Incorporates accessibility
 /// best practices and responsive defaults.
 
 @use '../abstracts/variables/__index__' as var;
 
 /// @name Box Sizing Reset
-/// @description Sets all elements to use box-sizing: border-box
+/// Sets all elements to use box-sizing: border-box
 /// to create more predictable layout behavior
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 /// @name Smooth Scrolling
-/// @description Enables smooth scrolling behavior for anchor links
+/// Enables smooth scrolling behavior for anchor links
 /// Note: This is automatically disabled for users with reduced motion preferences
 html {
   scroll-behavior: smooth;
 }
 
 /// @name Margin and Padding Reset
-/// @description Removes default margins and paddings from common elements
+/// Removes default margins and paddings from common elements
 /// to provide a clean baseline for consistent spacing
 body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, blockquote, figure, hr, form, fieldset, legend, button, input, textarea {
   margin: 0;
@@ -30,7 +31,7 @@ body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, blockquote, figure, hr, form, field
 }
 
 /// @name List Style Reset
-/// @description Removes bullets from lists with role="list" 
+/// Removes bullets from lists with role="list" 
 /// while preserving semantic meaning
 ul[role='list'],
 ol[role='list'] {
@@ -38,14 +39,14 @@ ol[role='list'] {
 }
 
 /// @name Link Decoration
-/// @description Improves underline appearance for links without classes
+/// Improves underline appearance for links without classes
 /// by allowing underlines to be interrupted by descenders
 a:not([class]) {
   text-decoration-skip-ink: auto;
 }
 
 /// @name Media Element Reset
-/// @description Makes images, videos, and other media elements responsive by default
+/// Makes images, videos, and other media elements responsive by default
 /// - display: block removes unwanted space below elements
 /// - max-width: 100% makes elements responsive within their containers
 /// - height: auto maintains proper aspect ratio when width changes
@@ -56,7 +57,7 @@ img, picture, svg, video, canvas {
 }
 
 /// @name Form Element Reset
-/// @description Improves form element consistency across browsers
+/// Improves form element consistency across browsers
 /// and makes them easier to style
 button, input, select, textarea {
   font: inherit; //Adopts the font from the parent element
@@ -64,7 +65,7 @@ button, input, select, textarea {
 }
 
 /// @name Button Reset
-/// @description Makes buttons more predictable to style
+/// Makes buttons more predictable to style
 button {
   background-color: transparent;
   border: none;
@@ -72,7 +73,7 @@ button {
 }
 
 /// @name Text Rendering
-/// @description Improves legibility and consistency of text
+/// Improves legibility and consistency of text
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

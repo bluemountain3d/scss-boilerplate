@@ -1,11 +1,12 @@
-/// Base: HTML
+/// @group Base
+/// @name HTML
 /// ==========
 
 @use '../abstracts/variables/__index__' as var;
 @use '../abstracts/functions/__index__' as fn;
 @use '../abstracts/mixins/__index__' as mx;
 
-/// Set all font related properties in ./src/scss/themes/_typography.scss
+/// Note! Set all font related properties in ./src/scss/themes/_typography.scss
 
 html {
   scroll-behavior: smooth;

@@ -1,8 +1,8 @@
-/// Abstracts Variables: Breakpoints
-/// ================================
-///
+/// @group Abstracts Variables
+/// @name Breakpoints
 /// Breakpoints use px for fixed layout control; typography uses rem/em to respect user font size (root set to 100%).
-/// 
+/// ================================
+
 /// @property {Length} $max-content-width - Maximum content width for centered layouts
 $max-content-width: 90rem;  // 1440 ÷ 16px
 

@@ -1,7 +1,8 @@
-/// Theme Colors
-/// ============
+/// @group Themes
+/// @name Colors
+/// =============
 
-/// @description A flexible theme system that supports both light and dark modes
+/// A flexible theme system that supports both light and dark modes
 /// using CSS custom properties. This system respects user system preferences
 /// while allowing explicit theme overrides via CSS classes.
 
@@ -13,7 +14,7 @@
 @use 'sass:map';
 
 /// Theme Light
-/// @description Defines CSS custom properties for the light theme. The color values
+/// Defines CSS custom properties for the light theme. The color values
 /// shown here are just examples - replace with your own preferred color palette.
 @mixin themeLight {
   --color-primary: #3a86ff; /// @desc Primary brand color (example value)
@@ -26,7 +27,7 @@
 }
 
 /// Theme Dark
-/// @description Defines CSS custom properties for the dark theme. The color values
+/// Defines CSS custom properties for the dark theme. The color values
 /// shown here are just examples - replace with your own preferred color palette.
 @mixin themeDark {
   --color-primary: #4361ee; /// @desc Primary brand color (example value)

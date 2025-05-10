@@ -13,22 +13,22 @@
 /// 
 /// ## Table of Contents
 /// 
-/// 1. px-to-rem($px, $base: 16, $unitless: false)
+/// 1. pxToRem($px, $base: 16, $unitless: false)
 ///    Convert pixels to rem units
 /// 
-/// 2. rem-to-px($rem, $base: 16, $unitless: false)
+/// 2. remToPx($rem, $base: 16, $unitless: false)
 ///    Convert rem units to pixels
 /// 
-/// 3. px-to-pt($px, $unitless: false)
+/// 3. pxToPt($px, $unitless: false)
 ///    Convert pixels to points
 /// 
-/// 4. pt-to-px($pt, $unitless: false)
+/// 4. ptToPx($pt, $unitless: false)
 ///    Convert points to pixels
 /// 
-/// 5. rem-to-pt($rem, $base: 16, $unitless: false)
+/// 5. remToPt($rem, $base: 16, $unitless: false)
 ///    Convert rem units to points
 /// 
-/// 6. pt-to-rem($pt, $base: 16, $unitless: false)
+/// 6. ptToRem($pt, $base: 16, $unitless: false)
 ///    Convert points to rem units
 
 @use '../variables/__index__' as var;
@@ -53,7 +53,7 @@
 ///   px-to-rem(32, 16, true) => 2
 ///   font-size: px-to-rem(24); => font-size: 1.5rem;
 
-@function px-to-rem(
+@function pxToRem(
   $px,
   $base: 16,
   $unitless: false
@@ -80,7 +80,7 @@
 ///   rem-to-px(1.5, 16, true) => 24
 ///   height: rem-to-px(3.75); => height: 60px;
 
-@function rem-to-px(
+@function remToPx(
   $rem,
   $base: 16,
   $unitless: false
@@ -107,7 +107,7 @@
 ///
 /// Note: Uses the standard conversion ratio of 1pt = 1.333333px (72pt/inch ÷ 96px/inch)
 
-@function px-to-pt(
+@function pxToPt(
   $px,
   $unitless: false
 ) {
@@ -134,7 +134,7 @@
 ///
 /// Note: Uses the standard conversion ratio of 1px = 0.75pt (96px/inch ÷ 72pt/inch)
 
-@function pt-to-px(
+@function ptToPx(
   $pt,
   $unitless: false
 ) {
@@ -161,7 +161,7 @@
 ///   rem-to-pt(4, 16, true) => 48
 ///   font-size: rem-to-pt(1); => font-size: 12pt;
 
-@function rem-to-pt(
+@function remToPt(
   $rem,
   $base: 16,
   $unitless: false
@@ -190,7 +190,7 @@
 ///   pt-to-rem(18, 16, true) => 1.5
 ///   margin: pt-to-rem(12); => margin: 1rem;
 
-@function pt-to-rem(
+@function ptToRem(
   $pt,
   $base: 16,
   $unitless: false

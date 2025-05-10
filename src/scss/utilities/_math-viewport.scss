@@ -1,4 +1,5 @@
-/// Utilities: Math & Viewport
+/// @group Utilities
+/// @name Math & Viewport
 /// ==========================
 
 @use '../abstracts/variables/__index__' as var;
@@ -8,8 +9,7 @@
 @use 'sass:math';
 
 /// @name Root Mathematical and Viewport Variables
-/// @description Defines mathematical constants and custom viewport units as CSS variables
-/// @access public
+/// Defines mathematical constants and custom viewport units as CSS variables
 :root {
   /// @prop {Number} --pi [3.1415926536] - The mathematical constant pi (π)
   /// @example css
@@ -32,7 +32,7 @@
   --vwx: 1vw;                                 // Responsive viewport unit
 
   /// @name Ultra-wide Screen Adaptation
-  /// @description Changes the viewport unit reference from width to height on very wide screens
+  /// Changes the viewport unit reference from width to height on very wide screens
   /// to prevent elements from becoming too large on ultrawide monitors
   @include mx.for-ultra-wide {
     --vwx: 2vh;                              // Switch to height-based scaling

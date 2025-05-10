@@ -1,13 +1,6 @@
-/// Abstracts Mixin: Media Queries
-/// ==============================
-
-@use '../variables/__index__' as var;
-@use '../functions/__index__' as fn;
-
-@use 'sass:string';
-@use 'sass:map';
-@use 'sass:list';
-
+/// @group Abstracts Mixins
+/// @name Media Queries
+/// 
 /// Media Queries Toolkit
 /// =====================
 ///
@@ -48,6 +41,14 @@
 /// 3. Media Query Mixins - The primary mixins for responsive design
 ///
 /// @requires $breakpoints map in '../variables', e.g., ('mobile': 320px, 'tablet': 768px)
+/// ==============================
+
+@use '../variables/__index__' as var;
+@use '../functions/__index__' as fn;
+
+@use 'sass:string';
+@use 'sass:map';
+@use 'sass:list';
 
 // ---------------------------------------------------------------------------
 // 1. Maps & Variables

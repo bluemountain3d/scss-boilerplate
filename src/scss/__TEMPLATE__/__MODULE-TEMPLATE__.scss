@@ -1,7 +1,8 @@
-/// [FOLDER]: <MODULE NAME>
-/// =======================
- 
+/// @group [FOLDER NAME]
+/// @name <MODULE NAME>
 /// Description of the module's purpose
+/// on multiple lines if neccesary
+/// =======================
 
 @use '../abstracts/variables/__index__' as var;
 @use '../abstracts/functions/__index__' as fn;
@@ -15,9 +16,10 @@
 @use 'sass:selector';
 @use 'sass:string';
 
-
 // Module local variables
 // $_module-local-variable: value;
 
 // Module styles
-// selector {}
+// selector {
+//   ... 
+// }

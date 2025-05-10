@@ -1,7 +1,8 @@
-/// Utilities Accessibility Helpers
+/// @group Utilities
+/// @name Accessibility Helpers
 /// ===============================
 
-/// @description A collection of utility classes and styles to improve accessibility
+/// A collection of utility classes and styles to improve accessibility
 /// and ensure compliance with WCAG standards.
 
 @use '../abstracts/variables/__index__' as var;
@@ -9,8 +10,7 @@
 @use '../abstracts/mixins/__index__' as mx;
 
 /// @name Visually Hidden
-/// @description Hides content visually while keeping it accessible to screen readers
-/// @access public
+/// Hides content visually while keeping it accessible to screen readers
 /// @example html
 ///   <div class="visually-hidden">This text is only read by screen readers</div>
 .visually-hidden {
@@ -27,8 +27,7 @@
 }
 
 /// @name Focus Styles
-/// @description Applies consistent focus styles to all interactive elements
-/// @access public
+/// Applies consistent focus styles to all interactive elements
 /// @example html
 ///   <button>This button will have consistent focus styles</button>
 a,
@@ -46,14 +45,14 @@ textarea,
 [role="menuitem"],
 [role="switch"],
 [role="slider"] {
-  /// @desc Polyfill for browsers that don't support :focus-visible
+  /// Polyfill for browsers that don't support :focus-visible
   &:focus:not(:focus-visible) {
     outline: 0;
     box-shadow: 0 0 0.5rem 0.25rem rgba(74, 144, 226, 0.5);
     z-index: 1;
   }
 
-  /// @desc Enhanced focus styles for keyboard navigation
+  /// Enhanced focus styles for keyboard navigation
   &:focus-visible {
     outline: 3px solid #4A90E2;
     outline-offset: 2px;
@@ -62,15 +61,14 @@ textarea,
 }
 
 /// @name Details/Summary Focus Styles
-/// @description Special focus handling for details/summary elements
-/// @access public
+/// Special focus handling for details/summary elements
 summary {
-  /// @desc Polyfill for browsers that don't support :focus-visible
+  /// Polyfill for browsers that don't support :focus-visible
   &:focus:not(:focus-visible) {
     outline: 0;
   }
 
-  /// @desc Enhanced focus styles for keyboard navigation
+  /// Enhanced focus styles for keyboard navigation
   &:focus-visible {
     outline: 3px solid #4A90E2;
     outline-offset: 2px;
@@ -79,21 +77,20 @@ summary {
 }
 
 /// @name Reduced Motion
-/// @description Respects user preference for reduced motion
-/// @access public
+/// Respects user preference for reduced motion
 /// @see https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions.html
 @media (prefers-reduced-motion: reduce) {
-  /// @desc Disable smooth scrolling when reduced motion is preferred
+  /// Disable smooth scrolling when reduced motion is preferred
   html:focus-within {
     scroll-behavior: auto;
   }
   
-  /// @desc Remove transitions and animations
+  /// Remove transitions and animations
   *, *::before, *::after {
     animation: none !important;
     transition: none !important;
     
-    /// @desc Handle inline styles without conflicts
+    /// Handle inline styles without conflicts
     &[style*="transition"] {
       transition-duration: 0.01ms !important;
     }
@@ -107,16 +104,15 @@ summary {
 }
 
 /// @name High Contrast Mode
-/// @description Improves usability in Windows High Contrast Mode
-/// @access public
+/// Improves usability in Windows High Contrast Mode
 /// @see https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
 @media (forced-colors: active) {
-  /// @desc Allow browser to handle color adjustments
+  /// Allow browser to handle color adjustments
   * {
     forced-color-adjust: none;
   }
   
-  /// @desc Ensure focus indicators are visible in high contrast mode
+  /// Ensure focus indicators are visible in high contrast mode
   a:focus, button:focus, input:focus {
     outline: solid 2px;
   }

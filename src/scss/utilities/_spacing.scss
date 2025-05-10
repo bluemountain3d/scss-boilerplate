@@ -1,7 +1,8 @@
-/// Utilities Spacing
-/// =================
+/// @group Utilities
+/// @name Spacing
+/// ================
 
-/// @description A comprehensive spacing system with fluid scaling based on typography.
+/// A comprehensive spacing system with fluid scaling based on typography.
 /// Provides consistent spacing variables that adapt to screen size.
 
 @use '../abstracts/variables/__index__' as var;
@@ -9,7 +10,7 @@
 @use '../abstracts/mixins/__index__' as mx;
 
 /// @name Spacing Variables
-/// @description Defines a set of spacing variables that scale proportionally with font size.
+/// Defines a set of spacing variables that scale proportionally with font size.
 /// All spacing values are calculated as multiples of the fluid font size (--fs-clamp),
 /// ensuring consistent proportions across all screen sizes.
 /// 
